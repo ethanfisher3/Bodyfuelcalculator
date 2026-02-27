@@ -3,7 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>ShredCalc — Pro</title>
+  <title>Bodyfuelcalculator</title>
+
+  <meta name="theme-color" content="#0a0f19" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Bodyfuelcalculator" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -35,40 +43,39 @@
     }
 
     /* ── Layout ── */
-    .wrap { max-width: 1020px; margin: 0 auto; padding: 20px 16px 60px; width: 100%; }
+    .wrap { max-width: 1020px; margin: 0 auto; padding: 16px 12px 60px; width: 100%; }
 
     /* ── Top bar ── */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 8px 4px 20px;
+      padding: 8px 4px 16px;
     }
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand { display: flex; align-items: center; gap: 10px; }
     .brand-icon {
-      width: 42px; height: 42px; border-radius: 14px;
+      width: 38px; height: 38px; border-radius: 12px;
       background: linear-gradient(135deg, var(--accent), #a78bfa);
-      display: grid; place-items: center; font-size: 20px;
-      box-shadow: 0 8px 24px rgba(124,106,247,.4);
+      display: grid; place-items: center; font-size: 18px;
+      box-shadow: 0 8px 20px rgba(124,106,247,.3);
     }
-    .brand-name { font-size: 19px; font-weight: 900; letter-spacing: -.03em; }
-    .brand-tag { font-size: 12px; color: var(--muted); font-weight: 700; margin-top: 2px; }
+    .brand-name { font-size: 17px; font-weight: 900; letter-spacing: -.03em; }
     .badge {
-      background: rgba(124,106,247,.18);
-      border: 1px solid rgba(124,106,247,.35);
+      background: rgba(124,106,247,.15);
+      border: 1px solid rgba(124,106,247,.3);
       color: #a78bfa;
-      font-size: 11px; font-weight: 800; letter-spacing: .08em;
-      padding: 5px 12px; border-radius: 999px;
+      font-size: 10px; font-weight: 800; letter-spacing: .06em;
+      padding: 4px 10px; border-radius: 999px;
       text-transform: uppercase;
     }
 
     /* ── Hero ── */
-    .hero { padding: 4px 4px 24px; }
+    .hero { padding: 4px 4px 20px; }
     .hero h1 {
-      font-size: clamp(32px, 6vw, 52px);
-      font-weight: 1000; letter-spacing: -.05em; line-height: 1.02;
-      margin-bottom: 10px;
+      font-size: clamp(28px, 6vw, 48px);
+      font-weight: 1000; letter-spacing: -.04em; line-height: 1.05;
+      margin-bottom: 8px;
     }
     .hero h1 span { color: var(--accent); }
-    .hero p { color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 58ch; }
+    .hero p { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 58ch; }
 
     /* ── Two-column layout ── */
     .layout { display: grid; gap: 20px; grid-template-columns: 1fr; }
@@ -78,36 +85,36 @@
 
     /* ── Card ── */
     .card {
-      background: linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.03));
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
       border: 1px solid var(--card-border);
       border-radius: var(--r);
-      padding: 20px;
+      padding: 18px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
       width: 100%;
     }
     .card-title {
-      font-size: 11px; font-weight: 900; letter-spacing: .14em;
+      font-size: 11px; font-weight: 900; letter-spacing: .12em;
       text-transform: uppercase; color: var(--muted);
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     /* ── Form elements ── */
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 14px; }
     .field label {
-      display: block; font-size: 12px; font-weight: 800;
-      color: var(--muted); letter-spacing: .04em; margin-bottom: 8px;
+      display: block; font-size: 11px; font-weight: 800;
+      color: var(--muted); letter-spacing: .04em; margin-bottom: 6px;
     }
     input[type="number"], select {
-      width: 100%; padding: 14px;
+      width: 100%; padding: 12px;
       border-radius: var(--r2); border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05); color: var(--text);
       font-size: 16px; outline: none; appearance: none;
-      transition: border-color .15s ease, background .15s ease;
+      transition: all .15s ease;
     }
     input[type="number"]:focus, select:focus {
       border-color: rgba(124,106,247,.5);
-      background: rgba(124,106,247,.07);
+      background: rgba(124,106,247,.08);
     }
     .select-wrap { position: relative; }
     .select-wrap::after {
@@ -117,16 +124,16 @@
 
     /* ── Segmented control ── */
     .seg {
-      display: flex; gap: 6px;
-      background: rgba(255,255,255,.05);
+      display: flex; gap: 4px;
+      background: rgba(255,255,255,.04);
       border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 5px;
+      border-radius: 12px; padding: 4px;
     }
     .seg button {
-      flex: 1; padding: 12px 8px;
-      border-radius: 10px; border: 0;
+      flex: 1; padding: 10px 6px;
+      border-radius: 9px; border: 0;
       background: transparent; color: var(--muted);
-      font-weight: 900; font-size: 14px; cursor: pointer;
+      font-weight: 900; font-size: 13px; cursor: pointer;
       transition: all .15s ease;
     }
     .seg button.active { background: rgba(255,255,255,.92); color: #0b0f17; }
@@ -136,209 +143,159 @@
 
     /* ── Day Picker ── */
     .day-picker {
-      display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
-      margin-top: 8px;
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
+      margin-top: 6px;
     }
     .day-btn {
-      aspect-ratio: 1; border-radius: 10px; border: 1px solid var(--card-border);
-      background: rgba(255,255,255,.04); color: var(--muted);
-      font-size: 11px; font-weight: 900; cursor: pointer;
+      aspect-ratio: 1; border-radius: 8px; border: 1px solid var(--card-border);
+      background: rgba(255,255,255,.03); color: var(--muted);
+      font-size: 10px; font-weight: 900; cursor: pointer;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
       transition: all .15s ease;
     }
-    .day-btn .d-name { margin-bottom: 2px; }
-    .day-btn .d-status { font-size: 8px; opacity: .6; }
+    .day-btn .d-name { margin-bottom: 1px; }
+    .day-btn .d-status { font-size: 7px; opacity: .5; }
     .day-btn.active {
       background: rgba(124,106,247,.2); border-color: var(--accent); color: #fff;
     }
     .day-btn.active .d-status { opacity: 1; }
 
-    /* ── Tabs ── */
-    .tabs {
-      display: flex; gap: 6px; margin: 14px 0 10px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 5px;
-    }
-    .tabs button {
-      flex: 1; padding: 12px 8px;
-      border-radius: 10px; border: 0;
-      background: transparent; color: var(--muted);
-      font-weight: 900; font-size: 13px; cursor: pointer;
-      transition: all .15s ease;
-    }
-    .tabs button.active { background: rgba(255,255,255,.92); color: #0b0f17; }
-
-    /* ── Panel animation ── */
-    .panel-wrap { position: relative; min-height: 120px; margin-bottom: 4px; }
-    .panel {
-      position: absolute; inset: 0;
-      opacity: 0; transform: translateX(10px);
-      pointer-events: none;
-      transition: opacity .18s ease, transform .18s ease;
-    }
-    .panel.active { opacity: 1; transform: translateX(0); pointer-events: auto; }
-    .panel.from-left { transform: translateX(-10px); }
-
     /* ── CTA ── */
     .cta {
-      width: 100%; margin-top: 14px; padding: 18px 14px;
-      border-radius: 16px; border: 0;
+      width: 100%; margin-top: 8px; padding: 16px 14px;
+      border-radius: 14px; border: 0;
       background: linear-gradient(135deg, var(--accent), #a78bfa);
-      color: #fff; font-weight: 900; font-size: 17px;
+      color: #fff; font-weight: 900; font-size: 16px;
       cursor: pointer; letter-spacing: -.01em;
-      box-shadow: 0 8px 28px rgba(124,106,247,.4);
+      box-shadow: 0 8px 24px rgba(124,106,247,.3);
       transition: all .2s cubic-bezier(.4,0,.2,1);
     }
-    .cta:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(124,106,247,.55); }
-    .cta:active { transform: scale(.97); }
+    .cta:active { transform: scale(.96); }
 
-    .hint { margin-top: 10px; color: var(--muted2); font-size: 12px; line-height: 1.5; }
+    .hint { margin-top: 10px; color: var(--muted2); font-size: 11px; line-height: 1.4; }
 
     /* ── Results panel ── */
-    #results { display: none; width: 100%; }
-    #results.visible { display: block; animation: slideUp .6s cubic-bezier(.2,1,.3,1) forwards; }
+    #results { display: none; width: 100%; margin-top: 20px; }
+    #results.visible { display: block; animation: slideUp .5s cubic-bezier(.2,1,.3,1) forwards; }
 
     @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
     /* ── Big number ── */
     .result-hero {
-      background: linear-gradient(135deg, rgba(124,106,247,.2), rgba(79,209,197,.15));
-      border: 1px solid rgba(124,106,247,.3);
-      border-radius: 18px; padding: 24px 20px;
-      margin-bottom: 14px; text-align: center;
+      background: linear-gradient(135deg, rgba(124,106,247,.18), rgba(79,209,197,.12));
+      border: 1px solid rgba(124,106,247,.25);
+      border-radius: 18px; padding: 22px 16px;
+      margin-bottom: 12px; text-align: center;
     }
-    .result-label { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
-    .result-big { font-size: 72px; font-weight: 1000; letter-spacing: -.05em; line-height: 1; }
-    .result-big span { font-size: 18px; font-weight: 700; color: var(--muted); margin-left: 4px; }
-    .result-meta { font-size: 13px; color: var(--muted); margin-top: 10px; }
+    .result-label { font-size: 10px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .result-big { font-size: 64px; font-weight: 1000; letter-spacing: -.04em; line-height: 1; }
+    .result-big span { font-size: 16px; font-weight: 700; color: var(--muted); margin-left: 3px; }
+    .result-meta { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
     /* ── Stat grid ── */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .stat-box {
-      background: rgba(255,255,255,.05);
+      background: rgba(255,255,255,.04);
       border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 16px;
+      border-radius: 12px; padding: 14px;
     }
-    .stat-box .t { font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
-    .stat-box .v { font-size: 24px; font-weight: 1000; letter-spacing: -.03em; }
+    .stat-box .t { font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; }
+    .stat-box .v { font-size: 22px; font-weight: 1000; letter-spacing: -.02em; }
     .stat-box .v.train { color: var(--accent); }
     .stat-box .v.rest { color: var(--accent2); }
-    .stat-box .v.tdee { color: #f6ad55; }
-    .stat-box .v.bmr { color: #fc8181; }
 
-    /* ── Tooltip Fix for Mobile ── */
+    /* ── Tooltip Fix ── */
     .tooltip-wrap { position: relative; }
     .tooltip-icon {
-      width: 24px; height: 24px; border-radius: 50%;
-      background: rgba(255,255,255,.12); color: var(--muted);
-      font-size: 12px; font-weight: 900; cursor: pointer;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: rgba(255,255,255,.1); color: var(--muted);
+      font-size: 11px; font-weight: 900; cursor: pointer;
       display: inline-grid; place-items: center;
     }
     .tooltip-text {
-      display: none; position: absolute; bottom: 140%; right: 0;
+      display: none; position: absolute; bottom: 130%; right: 0;
       background: #1a2035; border: 1px solid var(--card-border); color: var(--text);
-      font-size: 13px; line-height: 1.5; padding: 12px 16px;
-      border-radius: 12px; width: 220px; z-index: 100;
-      box-shadow: 0 8px 32px rgba(0,0,0,.6);
+      font-size: 12px; line-height: 1.5; padding: 10px 14px;
+      border-radius: 10px; width: 200px; z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5);
     }
     .tooltip-wrap:active .tooltip-text,
     .tooltip-wrap:hover .tooltip-text { display: block; }
 
-    /* ── Notes ── */
-    .notes {
-      background: rgba(255,255,255,.04);
-      border: 1px solid var(--card-border);
-      border-left: 4px solid var(--accent);
-      border-radius: 14px; padding: 16px;
-      color: var(--muted); font-size: 14px; line-height: 1.6;
-      margin-bottom: 14px;
-    }
-
     /* ── Charts section ── */
-    .charts-grid { display: grid; gap: 14px; grid-template-columns: 1fr; }
-    @media (min-width: 600px) { .charts-grid { grid-template-columns: 1fr 1fr; } }
-
     .chart-card {
-      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border: 1px solid var(--card-border);
-      border-radius: var(--r); padding: 20px;
-      box-shadow: var(--shadow);
-      width: 100%; overflow: hidden;
+      border-radius: var(--r); padding: 18px;
+      margin-bottom: 12px; width: 100%;
     }
     .chart-card h3 {
-      font-size: 11px; font-weight: 900; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
+      font-size: 10px; font-weight: 900; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
     }
-    .chart-wrap { position: relative; height: 200px; width: 100%; }
-    .chart-wrap-tall { position: relative; height: 240px; width: 100%; }
+    .chart-wrap { position: relative; height: 180px; width: 100%; }
 
     /* ── Macro pill fixes ── */
-    .macro-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
-    @media (max-width: 400px) { .macro-row { grid-template-columns: 1fr; } }
-    .macro-pill { border-radius: 12px; padding: 12px 8px; text-align: center; }
-    .macro-pill .m-name { font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .macro-pill .m-val { font-size: 20px; font-weight: 1000; margin: 4px 0 2px; }
-    .macro-pill .m-g { font-size: 10px; color: var(--muted); }
-    .macro-pill.protein { background: rgba(245,101,101,.15); border: 1px solid rgba(245,101,101,.3); }
-    .macro-pill.carbs { background: rgba(246,173,85,.12); border: 1px solid rgba(246,173,85,.28); }
-    .macro-pill.fat { background: rgba(104,211,145,.12); border: 1px solid rgba(104,211,145,.28); }
+    .macro-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .macro-pill { border-radius: 10px; padding: 10px 4px; text-align: center; }
+    .macro-pill .m-name { font-size: 9px; font-weight: 900; text-transform: uppercase; color: var(--muted); }
+    .macro-pill .m-val { font-size: 18px; font-weight: 1000; margin: 2px 0; }
+    .macro-pill .m-g { font-size: 9px; color: var(--muted); }
+    .macro-pill.protein { background: rgba(245,101,101,.12); border: 1px solid rgba(245,101,101,.2); }
+    .macro-pill.carbs { background: rgba(246,173,85,.1); border: 1px solid rgba(246,173,85,.2); }
+    .macro-pill.fat { background: rgba(104,211,145,.1); border: 1px solid rgba(104,211,145,.2); }
 
     /* ── Action buttons ── */
-    .action-bar { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+    .action-bar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
     .action-btn {
-      flex: 1; min-width: 140px; padding: 14px;
-      border-radius: 14px; border: 1px solid var(--card-border);
-      background: rgba(255,255,255,.06); color: var(--text);
-      font-weight: 800; font-size: 14px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: all .15s ease;
+      flex: 1; min-width: 120px; padding: 12px;
+      border-radius: 12px; border: 1px solid var(--card-border);
+      background: rgba(255,255,255,.05); color: var(--text);
+      font-weight: 800; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
     }
-    .action-btn:active { transform: scale(.95); background: rgba(255,255,255,.12); }
-
-    /* ── Divider ── */
-    .divider { height: 1px; background: var(--card-border); margin: 24px 0; }
 
     /* ── Section heading ── */
-    .section-heading {
-      font-size: 24px; font-weight: 900; letter-spacing: -.03em;
-      margin-bottom: 16px; margin-top: 32px;
-    }
+    .section-heading { font-size: 20px; font-weight: 900; margin-bottom: 12px; margin-top: 24px; }
     .section-heading span { color: var(--accent); }
 
     /* ── Footer ── */
     .footer {
-      margin-top: 60px; padding-top: 24px;
-      border-top: 1px solid var(--card-border);
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 12px;
-      color: var(--muted2); font-size: 12px;
+      margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--card-border);
+      display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+      color: var(--muted2); font-size: 11px;
     }
 
     /* ── Progress bar ── */
-    .progress-bar-wrap { margin-top: 10px; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
-    .progress-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 999px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+    .progress-bar-wrap { margin-top: 8px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+    .progress-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; transition: width .8s ease; }
 
-    /* ── Animations ── */
-    .stagger-in > * { opacity: 0; transform: translateY(20px); }
-    .visible .stagger-in > *:nth-child(1) { animation: slideUp .5s .1s forwards; }
-    .visible .stagger-in > *:nth-child(2) { animation: slideUp .5s .2s forwards; }
-    .visible .stagger-in > *:nth-child(3) { animation: slideUp .5s .3s forwards; }
-    .visible .stagger-in > *:nth-child(4) { animation: slideUp .5s .4s forwards; }
-
-    /* ── Mobile Tweaks ── */
+    /* ── Mobile Overlap Fixes ── */
     @media (max-width: 480px) {
-      .wrap { padding: 16px 12px 40px; }
-      .stat-grid { grid-template-columns: 1fr; }
-      .result-big { font-size: 60px; }
-      .day-picker { gap: 4px; }
-      .day-btn { font-size: 10px; border-radius: 8px; }
+      .wrap { padding: 12px 10px 40px; }
+      .result-big { font-size: 52px; }
+      .stat-grid { grid-template-columns: 1fr 1fr; } /* Keep 2 cols on mobile for compact results */
+      .day-btn { font-size: 9px; }
+      .layout { gap: 16px; }
     }
+  
+    /* ── Screenshot mode ── */
+    body.screenshot .topbar,
+    body.screenshot .hero,
+    body.screenshot #inputCard,
+    body.screenshot .footer,
+    body.screenshot #actionBar {
+      display: none !important;
+    }
+    body.screenshot #results { display:block !important; margin-top: 0 !important; }
+    body.screenshot #chartsSection { display:block !important; }
+    body.screenshot .wrap { padding-bottom: 24px; }
+
   </style>
 </head>
 <body>
@@ -349,18 +306,14 @@
   <div class="topbar">
     <div class="brand">
       <div class="brand-icon">🏋️</div>
-      <div>
-        <div class="brand-name">ShredCalc</div>
-        <div class="brand-tag">Calorie plan for lifters</div>
-      </div>
+      <div class="brand-name">Bodyfuelcalculator</div>
     </div>
-    <div class="badge">Pro</div>
-  </div>
+</div>
 
   <!-- Hero -->
   <div class="hero">
-    <h1>Your Personal <span>Gym Plan</span></h1>
-    <p>Custom training day selection, interactive charts, and science-backed calorie breakdowns for your specific goals.</p>
+    <h1>Your Personal <span>Bodyfuel Plan</span></h1>
+    <p>Custom training days and simplified activity selection for lifters.</p>
   </div>
 
   <!-- Two-column layout -->
@@ -381,7 +334,7 @@
       </div>
 
       <!-- Stats Grid -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="field">
           <label>Sex</label>
           <div class="select-wrap">
@@ -405,55 +358,45 @@
         </div>
       </div>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button id="tabAct" class="active" onclick="setTab('activity')">Training Days</button>
-        <button id="tabInt" onclick="setTab('intensity')">Activity & Intensity</button>
+      <!-- Activity & Intensity Combined -->
+      <div class="field">
+        <label>Activity & Intensity</label>
+        <div class="select-wrap">
+          <select id="activityIntensity">
+            <option value="1.2|120">Sedentary (No training)</option>
+            <option value="1.375|180">Light (1-2 days/wk, low intensity)</option>
+            <option value="1.55|180" selected>Moderate (3-5 days/wk, normal intensity)</option>
+            <option value="1.725|240">Active (6-7 days/wk, high intensity)</option>
+            <option value="1.9|300">Athlete (Elite level, very high intensity)</option>
+          </select>
+        </div>
       </div>
 
-      <div class="panel-wrap">
-        <!-- Training Days panel -->
-        <div id="panelAct" class="panel active from-left">
-          <div class="field">
-            <label>Select Training Days</label>
-            <div class="day-picker" id="dayPicker">
-              <button class="day-btn active" data-day="0"><span class="d-name">Mon</span><span class="d-status">Train</span></button>
-              <button class="day-btn" data-day="1"><span class="d-name">Tue</span><span class="d-status">Rest</span></button>
-              <button class="day-btn active" data-day="2"><span class="d-name">Wed</span><span class="d-status">Train</span></button>
-              <button class="day-btn" data-day="3"><span class="d-name">Thu</span><span class="d-status">Rest</span></button>
-              <button class="day-btn active" data-day="4"><span class="d-name">Fri</span><span class="d-status">Train</span></button>
-              <button class="day-btn active" data-day="5"><span class="d-name">Sat</span><span class="d-status">Train</span></button>
-              <button class="day-btn" data-day="6"><span class="d-name">Sun</span><span class="d-status">Rest</span></button>
-            </div>
-            <div class="hint">Tap days to toggle between Training and Rest.</div>
-          </div>
+      <!-- Rate -->
+      <div class="field">
+        <label id="rateLabel">Cut Rate (% bodyweight / week)</label>
+        <div class="select-wrap">
+          <select id="rate">
+            <option value="0.25">Easy (0.25%)</option>
+            <option value="0.5" selected>Standard (0.5%)</option>
+            <option value="0.75">Aggressive (0.75%)</option>
+          </select>
         </div>
+        <div class="hint" id="rateHint">This controls your deficit/surplus. Higher = faster change.</div>
+      </div>
 
-        <!-- Activity & Intensity panel -->
-        <div id="panelInt" class="panel from-right">
-          <div class="field">
-            <label>Daily Activity Level</label>
-            <div class="select-wrap">
-              <select id="activity">
-                <option value="1.2">Sedentary (No exercise)</option>
-                <option value="1.375">Lightly Active</option>
-                <option value="1.55" selected>Moderately Active</option>
-                <option value="1.725">Very Active</option>
-                <option value="1.9">Extra Active</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label>Training Intensity</label>
-            <div class="select-wrap">
-              <select id="intensity">
-                <option value="light">Light (+120 kcal)</option>
-                <option value="moderate" selected>Moderate (+180 kcal)</option>
-                <option value="hard">Hard (+240 kcal)</option>
-                <option value="veryhard">Very hard (+300 kcal)</option>
-              </select>
-            </div>
-          </div>
+
+      <!-- Training Days -->
+      <div class="field">
+        <label>Training Days</label>
+        <div class="day-picker" id="dayPicker">
+          <button class="day-btn active" data-day="0"><span class="d-name">Mon</span><span class="d-status">Train</span></button>
+          <button class="day-btn" data-day="1"><span class="d-name">Tue</span><span class="d-status">Rest</span></button>
+          <button class="day-btn active" data-day="2"><span class="d-name">Wed</span><span class="d-status">Train</span></button>
+          <button class="day-btn" data-day="3"><span class="d-name">Thu</span><span class="d-status">Rest</span></button>
+          <button class="day-btn active" data-day="4"><span class="d-name">Fri</span><span class="d-status">Train</span></button>
+          <button class="day-btn active" data-day="5"><span class="d-name">Sat</span><span class="d-status">Train</span></button>
+          <button class="day-btn" data-day="6"><span class="d-name">Sun</span><span class="d-status">Rest</span></button>
         </div>
       </div>
 
@@ -462,62 +405,59 @@
 
     <!-- RIGHT: Results -->
     <div id="results">
-      <div class="stagger-in">
-        <!-- Big number -->
-        <div class="result-hero card" id="resultHero">
-          <div class="result-label" id="rLabel">Daily Target</div>
-          <div class="result-big" id="rDaily">—<span>kcal/day</span></div>
-          <div class="result-meta" id="rMeta">—</div>
-        </div>
+      <!-- Big number -->
+      <div class="result-hero card" id="resultHero">
+        <div class="result-label" id="rLabel">Daily Target</div>
+        <div class="result-big" id="rDaily">—<span>kcal/day</span></div>
+        <div class="result-meta" id="rMeta">—</div>
+      </div>
 
-        <!-- Stat grid -->
-        <div class="stat-grid">
-          <div class="stat-box">
-            <div class="t">Training Day
-              <div class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-text">Higher calories to fuel your workouts and recovery.</span>
-              </div>
+      <!-- Stat grid -->
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="t">Training Day
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <span class="tooltip-text">Calories for your workout days.</span>
             </div>
-            <div class="v train" id="rTrain">—</div>
           </div>
-          <div class="stat-box">
-            <div class="t">Rest Day
-              <div class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-text">Lower calories on rest days to maintain your deficit or surplus.</span>
-              </div>
-            </div>
-            <div class="v rest" id="rRest">—</div>
-          </div>
-          <div class="stat-box">
-            <div class="t">TDEE
-              <div class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-text">Total Daily Energy Expenditure: how many calories you burn per day.</span>
-              </div>
-            </div>
-            <div class="v tdee" id="rTdee">—</div>
-          </div>
-          <div class="stat-box">
-            <div class="t">BMR
-              <div class="tooltip-wrap">
-                <span class="tooltip-icon">?</span>
-                <span class="tooltip-text">Basal Metabolic Rate: calories burned at complete rest.</span>
-              </div>
-            </div>
-            <div class="v bmr" id="rBmr">—</div>
-          </div>
+          <div class="v train" id="rTrain">—</div>
         </div>
-
-        <!-- Notes -->
-        <div class="notes" id="rNotes">—</div>
-
-        <!-- Action bar -->
-        <div class="action-bar">
-          <button class="action-btn" onclick="copyPlan()">📋 Copy Plan</button>
-          <button class="action-btn" onclick="printPlan()">🖨️ Save PDF</button>
+        <div class="stat-box">
+          <div class="t">Rest Day
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <span class="tooltip-text">Calories for your rest days.</span>
+            </div>
+          </div>
+          <div class="v rest" id="rRest">—</div>
         </div>
+        <div class="stat-box">
+          <div class="t">TDEE
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <span class="tooltip-text">Total Daily Energy Expenditure.</span>
+            </div>
+          </div>
+          <div class="v tdee" id="rTdee">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="t">BMR
+            <div class="tooltip-wrap">
+              <span class="tooltip-icon">?</span>
+              <span class="tooltip-text">Basal Metabolic Rate.</span>
+            </div>
+          </div>
+          <div class="v bmr" id="rBmr">—</div>
+        </div>
+      </div>
+
+      <!-- Action bar -->
+      <div class="action-bar" id="actionBar">
+        <button class="action-btn" onclick="copyPlan()">📋 Copy</button>
+        <button class="action-btn" onclick="toggleScreenshotMode()">📸 Screenshot</button>
+        <button class="action-btn" onclick="installApp()">⬇️ Install</button>
+        <button class="action-btn" onclick="window.print()">🖨️ PDF</button>
       </div>
     </div>
   </div>
@@ -526,45 +466,20 @@
   <div id="chartsSection" style="display:none;">
     <div class="section-heading">Visual <span>Breakdown</span></div>
     
-    <div class="charts-grid">
-      <div class="chart-card">
-        <h3>Calorie Comparison</h3>
-        <div class="chart-wrap"><canvas id="barChart"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <h3>Energy Distribution</h3>
-        <div class="chart-wrap"><canvas id="donutChart"></canvas></div>
-      </div>
+    <div class="chart-card">
+      <h3>Weekly Schedule</h3>
+      <div class="chart-wrap"><canvas id="weekChart"></canvas></div>
     </div>
 
-    <div class="chart-card" style="margin-top:14px;">
-      <h3>Weekly Calorie Schedule</h3>
-      <div class="chart-wrap-tall"><canvas id="weekChart"></canvas></div>
-    </div>
-
-    <div class="chart-card" style="margin-top:14px;">
-      <h3>Macros (Training Day)</h3>
-      <div class="charts-grid" style="grid-template-columns: 1fr; align-items: center;">
-        <div class="chart-wrap" style="height: 180px;"><canvas id="macroChart"></canvas></div>
-        <div class="macro-row">
-          <div class="macro-pill protein">
-            <div class="m-name">Protein</div>
-            <div class="m-val" id="mProtein">—</div>
-            <div class="m-g">grams</div>
-          </div>
-          <div class="macro-pill carbs">
-            <div class="m-name">Carbs</div>
-            <div class="m-val" id="mCarbs">—</div>
-            <div class="m-g">grams</div>
-          </div>
-          <div class="macro-pill fat">
-            <div class="m-name">Fat</div>
-            <div class="m-val" id="mFat">—</div>
-            <div class="m-g">grams</div>
-          </div>
-        </div>
+    <div class="chart-card">
+      <h3>Macros (Train Day)</h3>
+      <div class="chart-wrap" style="height: 140px;"><canvas id="macroChart"></canvas></div>
+      <div class="macro-row">
+        <div class="macro-pill protein"><div class="m-name">Protein</div><div class="m-val" id="mProtein">—</div><div class="m-g">g</div></div>
+        <div class="macro-pill carbs"><div class="m-name">Carbs</div><div class="m-val" id="mCarbs">—</div><div class="m-g">g</div></div>
+        <div class="macro-pill fat"><div class="m-name">Fat</div><div class="m-val" id="mFat">—</div><div class="m-g">g</div></div>
       </div>
-      <div style="margin-top:20px;">
+      <div style="margin-top:16px;">
         <div class="progress-bar-wrap">
           <div class="progress-label"><span>Protein</span><span id="pProteinPct">—</span></div>
           <div class="progress-bar"><div class="progress-fill" id="pProteinBar" style="background:#fc8181; width:0%"></div></div>
@@ -580,34 +495,39 @@
       </div>
     </div>
 
-    <div class="chart-card" style="margin-top:14px;">
-      <h3>12-Week Weight Projection</h3>
-      <div class="chart-wrap-tall"><canvas id="projChart"></canvas></div>
+    <div class="chart-card">
+      <h3>12-Week Projection</h3>
+      <div class="chart-wrap"><canvas id="projChart"></canvas></div>
     </div>
   </div>
 
   <div class="footer">
-    <div>ShredCalc Pro — Mifflin–St Jeor Formula</div>
-    <div>Results are estimates. Consult a professional.</div>
+    <div>Bodyfuelcalculator</div>
+    <div>Consult a professional.</div>
   </div>
 </div>
 
-<div id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#1a2035; border:1px solid var(--accent); color:#fff; padding:12px 24px; border-radius:999px; font-size:14px; font-weight:800; box-shadow:0 8px 32px rgba(0,0,0,.4); transition:all .3s ease; opacity:0; pointer-events:none; z-index:9999;">Copied!</div>
+
+<div id="ssBar" style="position:fixed; left:50%; transform:translateX(-50%) translateY(18px); bottom:16px; width:min(980px, calc(100% - 20px)); display:flex; gap:10px; padding:10px; border-radius:999px; background:rgba(10,15,25,.72); border:1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px); box-shadow:0 18px 60px rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:all .25s ease; z-index:9998;">
+  <button class="action-btn" style="flex:1; margin:0; background:rgba(255,255,255,.06);" onclick="toggleScreenshotMode(false)">← Exit screenshot</button>
+  <button class="action-btn" style="flex:1; margin:0; background:linear-gradient(135deg, var(--accent), #a78bfa); border:0;" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️ Top</button>
+</div>
+
+<div id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#1a2035; border:1px solid var(--accent); color:#fff; padding:10px 20px; border-radius:999px; font-size:13px; font-weight:800; box-shadow:0 8px 32px rgba(0,0,0,.4); transition:all .3s ease; opacity:0; pointer-events:none; z-index:9999;">Copied!</div>
 
 <script>
   let goal = "cut";
-  let currentTab = "activity";
   let isTrainDay = [true, false, true, false, true, true, false];
   let charts = {};
   let lastPlan = null;
 
-  // Day Picker Init
   document.querySelectorAll('.day-btn').forEach((btn, i) => {
     btn.addEventListener('click', () => {
       isTrainDay[i] = !isTrainDay[i];
       btn.classList.toggle('active', isTrainDay[i]);
       btn.querySelector('.d-status').textContent = isTrainDay[i] ? 'Train' : 'Rest';
     });
+    syncRateUI();
   });
 
   function setGoal(g) {
@@ -617,23 +537,7 @@
       btn.classList.toggle('active', id === g);
       btn.classList.toggle(id, id === g);
     });
-  }
-
-  function setTab(which) {
-    if (which === currentTab) return;
-    const goingInt = which === "intensity";
-    document.getElementById("tabAct").classList.toggle("active", !goingInt);
-    document.getElementById("tabInt").classList.toggle("active", goingInt);
-    const pA = document.getElementById("panelAct");
-    const pI = document.getElementById("panelInt");
-    if (goingInt) {
-      pA.classList.remove("active");
-      pI.classList.add("active");
-    } else {
-      pI.classList.remove("active");
-      pA.classList.add("active");
-    }
-    currentTab = which;
+    syncRateUI();
   }
 
   function r(n) { return Math.round(n); }
@@ -644,30 +548,46 @@
     const age = Number(document.getElementById("age").value);
     const height = Number(document.getElementById("height").value);
     const weight = Number(document.getElementById("weight").value);
-    const activity = Number(document.getElementById("activity").value);
-    const intensity = document.getElementById("intensity").value;
+    const [act, bumpVal] = document.getElementById("activityIntensity").value.split('|').map(Number);
     const trainDays = isTrainDay.filter(d => d).length;
     const restDays = 7 - trainDays;
 
     if (!age || !height || !weight) return null;
 
     const bmr = sex === "male" ? (10 * weight + 6.25 * height - 5 * age + 5) : (10 * weight + 6.25 * height - 5 * age - 161);
-    const tdee = bmr * activity;
+    const tdee = bmr * act;
+
+    // Smarter target: % bodyweight per week (weekly kg -> kcal -> daily)
+    const rate = Number(document.getElementById("rate").value || 0);
+    const weeklyKg = weight * (rate / 100);
+    const dailyAdj = (weeklyKg * 7700) / 7; // kcal/day
 
     let target = tdee;
-    if (goal === "cut") target = tdee - 450;
-    if (goal === "bulk") target = tdee + 300;
+    if (goal === "cut") target = tdee - dailyAdj;
+    if (goal === "bulk") target = tdee + dailyAdj;
+    // maintain stays at tdee
 
-    const bump = {light:120, moderate:180, hard:240, veryhard:300}[intensity];
+    // Split training/rest while keeping weekly average = target
+    const minCal = (sex === "male") ? 1500 : 1200;
+    let bump = bumpVal;
+
     let trainKcal = target, restKcal = target;
     if (trainDays > 0 && restDays > 0) {
+      // Rest day formula: rest = target - bump*(trainDays/restDays)
+      // Enforce rest >= minCal by reducing bump if needed
+      const maxBump = Math.max(0, (target - minCal) * (restDays / trainDays));
+      bump = Math.min(bump, maxBump);
+
       trainKcal = target + bump;
       restKcal = target - (bump * trainDays / restDays);
     }
 
+    // Macros (simple + gym safe)
     const proteinG = r(weight * 2.2);
-    const fatG = r(trainKcal * 0.25 / 9);
-    const carbsG = r((trainKcal - proteinG * 4 - fatG * 9) / 4);
+    const fatMinG = r(weight * 0.6);
+    const fatFromPctG = r(trainKcal * 0.25 / 9);
+    const fatG = Math.max(fatMinG, fatFromPctG);
+    const carbsG = Math.max(0, r((trainKcal - proteinG * 4 - fatG * 9) / 4));
 
     return {
       goal: goal.toUpperCase(), goalRaw: goal, trainDays, restDays,
@@ -685,9 +605,7 @@
     renderResults(plan);
     document.getElementById("results").classList.add("visible");
     document.getElementById("chartsSection").style.display = "block";
-    setTimeout(() => {
-      document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
-    }, 100);
+    setTimeout(() => { document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" }); }, 100);
   }
 
   function renderResults(plan) {
@@ -715,38 +633,12 @@
       document.getElementById("pFatBar").style.width = (plan.fatG*9/totalKcal*100) + "%";
     }, 100);
 
-    const hero = document.getElementById("resultHero");
-    hero.style.background = `linear-gradient(135deg, ${gc}22, ${gc}11)`;
-    hero.style.borderColor = gc + "55";
-
+    document.getElementById("resultHero").style.borderColor = gc + "55";
     updateCharts(plan, gc);
   }
 
   function updateCharts(plan, gc) {
     const chartConfigs = {
-      barChart: {
-        type: 'bar',
-        data: {
-          labels: ['BMR', 'TDEE', 'Target', 'Train', 'Rest'],
-          datasets: [{
-            data: [plan.bmr, plan.tdee, plan.daily, plan.trainKcal, plan.restKcal],
-            backgroundColor: ['#fc8181', '#f6ad55', gc, '#7c6af7', '#4fd1c5'],
-            borderRadius: 6
-          }]
-        }
-      },
-      donutChart: {
-        type: 'doughnut',
-        data: {
-          labels: ['BMR', 'Activity', plan.goalRaw === 'cut' ? 'Deficit' : 'Surplus'],
-          datasets: [{
-            data: [plan.bmr, plan.tdee - plan.bmr, Math.abs(plan.daily - plan.tdee)],
-            backgroundColor: ['#fc8181', '#f6ad55', '#7c6af7'],
-            borderWidth: 0
-          }]
-        },
-        options: { cutout: '70%' }
-      },
       weekChart: {
         type: 'bar',
         data: {
@@ -793,27 +685,163 @@
         options: {
           responsive: true,
           maintainAspectRatio: false,
-          plugins: { legend: { display: id.includes('donut') || id.includes('macro') } },
-          scales: id.includes('Chart') && !id.includes('donut') && !id.includes('macro') ? {
-            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)' } },
-            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+          plugins: { legend: { display: id.includes('macro') } },
+          scales: id.includes('Chart') && !id.includes('macro') ? {
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } },
+            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)', font: { size: 10 } } }
           } : {}
         }
       });
     });
+    syncRateUI();
   }
+
+
+  // --- Rate UI updates (label + options) ---
+  function syncRateUI() {
+    const rateSel = document.getElementById("rate");
+    const label = document.getElementById("rateLabel");
+    const hint = document.getElementById("rateHint");
+
+    if (goal === "cut") {
+      label.textContent = "Cut Rate (% bodyweight / week)";
+      hint.textContent = "Faster cut = bigger deficit. 0.5%/wk is a solid default for most lifters.";
+      // ensure cut options
+      setRateOptions([
+        {v:0.25, t:"Easy (0.25%)"},
+        {v:0.5,  t:"Standard (0.5%)"},
+        {v:0.75, t:"Aggressive (0.75%)"}
+      ], 0.5);
+      rateSel.disabled = false;
+    } else if (goal === "bulk") {
+      label.textContent = "Lean Bulk Rate (% bodyweight / week)";
+      hint.textContent = "Keep it small to stay lean. 0.25%/wk is usually plenty.";
+      setRateOptions([
+        {v:0.25, t:"Lean (0.25%)"},
+        {v:0.5,  t:"Faster (0.5%)"}
+      ], 0.25);
+      rateSel.disabled = false;
+    } else {
+      label.textContent = "Rate";
+      hint.textContent = "Maintenance keeps you around your TDEE.";
+      setRateOptions([{v:0, t:"Maintenance (0%)"}], 0);
+      rateSel.disabled = true;
+    }
+  }
+
+  function setRateOptions(opts, fallback) {
+    const rateSel = document.getElementById("rate");
+    const current = Number(rateSel.value || fallback);
+    rateSel.innerHTML = opts.map(o => `<option value="${o.v}">${o.t}</option>`).join("");
+    const values = opts.map(o => Number(o.v));
+    rateSel.value = values.includes(current) ? String(current) : String(fallback);
+  }
+
+  // --- Screenshot mode ---
+  let ssTimer = null;
+  function toggleScreenshotMode(force) {
+    const on = (typeof force === "boolean") ? force : !document.body.classList.contains("screenshot");
+    document.body.classList.toggle("screenshot", on);
+
+    const bar = document.getElementById("ssBar");
+    if (on) {
+      bar.style.opacity = "1";
+      bar.style.pointerEvents = "auto";
+      bar.style.transform = "translateX(-50%) translateY(0)";
+      autoHideSsBar();
+      // jump to results
+      if (!document.getElementById("results").classList.contains("visible")) calculateAndShow();
+      setTimeout(()=>document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"}), 150);
+    } else {
+      clearTimeout(ssTimer);
+      bar.style.opacity = "0";
+      bar.style.pointerEvents = "none";
+      bar.style.transform = "translateX(-50%) translateY(18px)";
+    }
+  }
+
+  function autoHideSsBar() {
+    clearTimeout(ssTimer);
+    const bar = document.getElementById("ssBar");
+    ssTimer = setTimeout(() => {
+      bar.style.opacity = "0";
+      bar.style.pointerEvents = "none";
+      bar.style.transform = "translateX(-50%) translateY(18px)";
+    }, 1700);
+  }
+
+  // Tap anywhere in screenshot mode to show the bar again
+  document.addEventListener("click", (e) => {
+    if (!document.body.classList.contains("screenshot")) return;
+    if (e.target.closest("#ssBar")) return;
+    const bar = document.getElementById("ssBar");
+    bar.style.opacity = "1";
+    bar.style.pointerEvents = "auto";
+    bar.style.transform = "translateX(-50%) translateY(0)";
+    autoHideSsBar();
+  });
+
+  // --- Install as PWA (Android/desktop prompt + iOS instructions) ---
+  let deferredPrompt = null;
+
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+  });
+
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+  function isInStandalone() {
+    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+  }
+
+  async function installApp() {
+    if (isInStandalone()) {
+      showToast("Already installed ✓");
+      return;
+    }
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const choice = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      showToast(choice?.outcome === "accepted" ? "Installed ✓" : "Install dismissed");
+      return;
+    }
+    if (isIOS()) {
+      alert("On iPhone: Share → Add to Home Screen to install.");
+      return;
+    }
+    alert("Install prompt isn't available yet. Try in Chrome/Edge, then use the Install button in the browser menu.");
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
+    setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 1800);
+  }
+
+  // --- Service worker (PWA offline shell) ---
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(()=>{});
+    });
+    syncRateUI();
+  }
+
+  // Initial sync
+  syncRateUI();
+
 
   function copyPlan() {
     const p = lastPlan;
-    const text = `ShredCalc Plan (${p.goal})\nDaily: ${p.daily} kcal\nTrain: ${p.trainKcal} kcal\nRest: ${p.restKcal} kcal\nMacros: P ${p.proteinG}g | C ${p.carbsG}g | F ${p.fatG}g`;
+    const text = `Bodyfuelcalculator (${p.goal})\nDaily: ${p.daily} kcal\nTrain: ${p.trainKcal} kcal\nRest: ${p.restKcal} kcal\nMacros: P ${p.proteinG}g | C ${p.carbsG}g | F ${p.fatG}g`;
     navigator.clipboard.writeText(text).then(() => {
-      const t = document.getElementById("toast");
-      t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
-      setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 2000);
+      showToast("Copied ✓");
     });
+    syncRateUI();
   }
-
-  function printPlan() { window.print(); }
 </script>
 </body>
 </html>
