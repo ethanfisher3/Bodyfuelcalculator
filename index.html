@@ -3,15 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>Bodyfuelcalculator</title>
+  <title>Bodyfuelcalculator — Pro v4</title>
 
   <meta name="theme-color" content="#0a0f19" />
-  <link rel="manifest" href="manifest.webmanifest" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Bodyfuelcalculator" />
-  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
-
+  
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -42,10 +39,8 @@
       overflow-x: hidden;
     }
 
-    /* ── Layout ── */
     .wrap { max-width: 1020px; margin: 0 auto; padding: 16px 12px 60px; width: 100%; }
 
-    /* ── Top bar ── */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 8px 4px 16px;
@@ -67,7 +62,6 @@
       text-transform: uppercase;
     }
 
-    /* ── Hero ── */
     .hero { padding: 4px 4px 20px; }
     .hero h1 {
       font-size: clamp(28px, 6vw, 48px);
@@ -77,13 +71,11 @@
     .hero h1 span { color: var(--accent); }
     .hero p { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 58ch; }
 
-    /* ── Two-column layout ── */
     .layout { display: grid; gap: 20px; grid-template-columns: 1fr; }
     @media (min-width: 840px) {
       .layout { grid-template-columns: 400px 1fr; align-items: start; }
     }
 
-    /* ── Card ── */
     .card {
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
       border: 1px solid var(--card-border);
@@ -99,7 +91,6 @@
       margin-bottom: 12px;
     }
 
-    /* ── Form elements ── */
     .field { margin-bottom: 14px; }
     .field label {
       display: block; font-size: 11px; font-weight: 800;
@@ -122,7 +113,6 @@
       transform: translateY(-50%); color: var(--muted); pointer-events: none;
     }
 
-    /* ── Segmented control ── */
     .seg {
       display: flex; gap: 4px;
       background: rgba(255,255,255,.04);
@@ -141,7 +131,6 @@
     .seg button.active.maintain { background: linear-gradient(135deg, #68d391, #48bb78); color: #fff; }
     .seg button.active.bulk { background: linear-gradient(135deg, #f6ad55, #ed8936); color: #fff; }
 
-    /* ── Day Picker ── */
     .day-picker {
       display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
       margin-top: 6px;
@@ -160,7 +149,6 @@
     }
     .day-btn.active .d-status { opacity: 1; }
 
-    /* ── CTA ── */
     .cta {
       width: 100%; margin-top: 8px; padding: 16px 14px;
       border-radius: 14px; border: 0;
@@ -174,7 +162,6 @@
 
     .hint { margin-top: 10px; color: var(--muted2); font-size: 11px; line-height: 1.4; }
 
-    /* ── Results panel ── */
     #results { display: none; width: 100%; margin-top: 20px; }
     #results.visible { display: block; animation: slideUp .5s cubic-bezier(.2,1,.3,1) forwards; }
 
@@ -183,7 +170,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Big number ── */
     .result-hero {
       background: linear-gradient(135deg, rgba(124,106,247,.18), rgba(79,209,197,.12));
       border: 1px solid rgba(124,106,247,.25);
@@ -195,7 +181,6 @@
     .result-big span { font-size: 16px; font-weight: 700; color: var(--muted); margin-left: 3px; }
     .result-meta { font-size: 12px; color: var(--muted); margin-top: 8px; }
 
-    /* ── Stat grid ── */
     .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
     .stat-box {
       background: rgba(255,255,255,.04);
@@ -207,7 +192,6 @@
     .stat-box .v.train { color: var(--accent); }
     .stat-box .v.rest { color: var(--accent2); }
 
-    /* ── Tooltip Fix ── */
     .tooltip-wrap { position: relative; }
     .tooltip-icon {
       width: 22px; height: 22px; border-radius: 50%;
@@ -225,7 +209,6 @@
     .tooltip-wrap:active .tooltip-text,
     .tooltip-wrap:hover .tooltip-text { display: block; }
 
-    /* ── Charts section ── */
     .chart-card {
       background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
       border: 1px solid var(--card-border);
@@ -238,7 +221,6 @@
     }
     .chart-wrap { position: relative; height: 180px; width: 100%; }
 
-    /* ── Macro pill fixes ── */
     .macro-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 12px; }
     .macro-pill { border-radius: 10px; padding: 10px 4px; text-align: center; }
     .macro-pill .m-name { font-size: 9px; font-weight: 900; text-transform: uppercase; color: var(--muted); }
@@ -248,7 +230,6 @@
     .macro-pill.carbs { background: rgba(246,173,85,.1); border: 1px solid rgba(246,173,85,.2); }
     .macro-pill.fat { background: rgba(104,211,145,.1); border: 1px solid rgba(104,211,145,.2); }
 
-    /* ── Action buttons ── */
     .action-bar { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
     .action-btn {
       flex: 1; min-width: 120px; padding: 12px;
@@ -258,72 +239,49 @@
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
 
-    /* ── Section heading ── */
     .section-heading { font-size: 20px; font-weight: 900; margin-bottom: 12px; margin-top: 24px; }
     .section-heading span { color: var(--accent); }
 
-    /* ── Footer ── */
     .footer {
       margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--card-border);
       display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
       color: var(--muted2); font-size: 11px;
     }
 
-    /* ── Progress bar ── */
     .progress-bar-wrap { margin-top: 8px; }
     .progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 4px; }
     .progress-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.06); overflow: hidden; }
     .progress-fill { height: 100%; border-radius: 999px; transition: width .8s ease; }
 
-    /* ── Mobile Overlap Fixes ── */
     @media (max-width: 480px) {
       .wrap { padding: 12px 10px 40px; }
       .result-big { font-size: 52px; }
-      .stat-grid { grid-template-columns: 1fr 1fr; } /* Keep 2 cols on mobile for compact results */
+      .stat-grid { grid-template-columns: 1fr 1fr; }
       .day-btn { font-size: 9px; }
       .layout { gap: 16px; }
     }
-  
-    /* ── Screenshot mode ── */
-    body.screenshot .topbar,
-    body.screenshot .hero,
-    body.screenshot #inputCard,
-    body.screenshot .footer,
-    body.screenshot #actionBar {
-      display: none !important;
-    }
-    body.screenshot #results { display:block !important; margin-top: 0 !important; }
-    body.screenshot #chartsSection { display:block !important; }
-    body.screenshot .wrap { padding-bottom: 24px; }
-
   </style>
 </head>
 <body>
 
 <div class="wrap">
-
-  <!-- Top bar -->
   <div class="topbar">
     <div class="brand">
       <div class="brand-icon">🏋️</div>
       <div class="brand-name">Bodyfuelcalculator</div>
     </div>
-</div>
+    <div class="badge">Pro v4</div>
+  </div>
 
-  <!-- Hero -->
   <div class="hero">
-    <h1>Your Personal <span>Bodyfuel Plan</span></h1>
+    <h1>Your Personal <span>Gym Plan</span></h1>
     <p>Custom training days and simplified activity selection for lifters.</p>
   </div>
 
-  <!-- Two-column layout -->
   <div class="layout">
-
-    <!-- LEFT: Input form -->
     <div class="card" id="inputCard">
       <div class="card-title">Setup</div>
 
-      <!-- Goal -->
       <div class="field">
         <label>Goal</label>
         <div class="seg">
@@ -333,7 +291,6 @@
         </div>
       </div>
 
-      <!-- Stats Grid -->
       <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="field">
           <label>Sex</label>
@@ -358,7 +315,6 @@
         </div>
       </div>
 
-      <!-- Activity & Intensity Combined -->
       <div class="field">
         <label>Activity & Intensity</label>
         <div class="select-wrap">
@@ -372,21 +328,16 @@
         </div>
       </div>
 
-      <!-- Rate -->
-      <div class="field">
-        <label id="rateLabel">Cut Rate (% bodyweight / week)</label>
+      <div class="field" id="rateField">
+        <label id="rateLabel">Weight Change Rate</label>
         <div class="select-wrap">
           <select id="rate">
-            <option value="0.25">Easy (0.25%)</option>
-            <option value="0.5" selected>Standard (0.5%)</option>
-            <option value="0.75">Aggressive (0.75%)</option>
+            <!-- Options injected via JS -->
           </select>
         </div>
-        <div class="hint" id="rateHint">This controls your deficit/surplus. Higher = faster change.</div>
+        <div class="hint" id="rateHint">Choose your weekly target.</div>
       </div>
 
-
-      <!-- Training Days -->
       <div class="field">
         <label>Training Days</label>
         <div class="day-picker" id="dayPicker">
@@ -403,16 +354,13 @@
       <button class="cta" onclick="calculateAndShow()">🧮 Calculate My Plan</button>
     </div>
 
-    <!-- RIGHT: Results -->
     <div id="results">
-      <!-- Big number -->
       <div class="result-hero card" id="resultHero">
         <div class="result-label" id="rLabel">Daily Target</div>
         <div class="result-big" id="rDaily">—<span>kcal/day</span></div>
         <div class="result-meta" id="rMeta">—</div>
       </div>
 
-      <!-- Stat grid -->
       <div class="stat-grid">
         <div class="stat-box">
           <div class="t">Training Day
@@ -452,17 +400,13 @@
         </div>
       </div>
 
-      <!-- Action bar -->
-      <div class="action-bar" id="actionBar">
+      <div class="action-bar">
         <button class="action-btn" onclick="copyPlan()">📋 Copy</button>
-        <button class="action-btn" onclick="toggleScreenshotMode()">📸 Screenshot</button>
-        <button class="action-btn" onclick="installApp()">⬇️ Install</button>
         <button class="action-btn" onclick="window.print()">🖨️ PDF</button>
       </div>
     </div>
   </div>
 
-  <!-- Charts section -->
   <div id="chartsSection" style="display:none;">
     <div class="section-heading">Visual <span>Breakdown</span></div>
     
@@ -502,15 +446,9 @@
   </div>
 
   <div class="footer">
-    <div>Bodyfuelcalculator</div>
+    <div>Bodyfuelcalculator Pro v4</div>
     <div>Consult a professional.</div>
   </div>
-</div>
-
-
-<div id="ssBar" style="position:fixed; left:50%; transform:translateX(-50%) translateY(18px); bottom:16px; width:min(980px, calc(100% - 20px)); display:flex; gap:10px; padding:10px; border-radius:999px; background:rgba(10,15,25,.72); border:1px solid rgba(255,255,255,.14); backdrop-filter: blur(14px); box-shadow:0 18px 60px rgba(0,0,0,.55); opacity:0; pointer-events:none; transition:all .25s ease; z-index:9998;">
-  <button class="action-btn" style="flex:1; margin:0; background:rgba(255,255,255,.06);" onclick="toggleScreenshotMode(false)">← Exit screenshot</button>
-  <button class="action-btn" style="flex:1; margin:0; background:linear-gradient(135deg, var(--accent), #a78bfa); border:0;" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆️ Top</button>
 </div>
 
 <div id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#1a2035; border:1px solid var(--accent); color:#fff; padding:10px 20px; border-radius:999px; font-size:13px; font-weight:800; box-shadow:0 8px 32px rgba(0,0,0,.4); transition:all .3s ease; opacity:0; pointer-events:none; z-index:9999;">Copied!</div>
@@ -527,7 +465,6 @@
       btn.classList.toggle('active', isTrainDay[i]);
       btn.querySelector('.d-status').textContent = isTrainDay[i] ? 'Train' : 'Rest';
     });
-    syncRateUI();
   });
 
   function setGoal(g) {
@@ -543,6 +480,35 @@
   function r(n) { return Math.round(n); }
   function goalColor(g) { return g==="cut" ? "#f56565" : g==="bulk" ? "#f6ad55" : "#68d391"; }
 
+  function syncRateUI() {
+    const rateSel = document.getElementById("rate");
+    const label = document.getElementById("rateLabel");
+    const hint = document.getElementById("rateHint");
+    const rateField = document.getElementById("rateField");
+
+    if (goal === "cut") {
+      rateField.style.display = "block";
+      label.textContent = "Weekly Weight Loss Target";
+      hint.textContent = "Choose how fast you want to lose weight.";
+      rateSel.innerHTML = `
+        <option value="0.25">Mild (0.25 kg / week)</option>
+        <option value="0.5" selected>Normal (0.5 kg / week)</option>
+        <option value="1">Extreme (1 kg / week)</option>
+      `;
+    } else if (goal === "bulk") {
+      rateField.style.display = "block";
+      label.textContent = "Weekly Weight Gain Target";
+      hint.textContent = "Choose how fast you want to gain weight.";
+      rateSel.innerHTML = `
+        <option value="0.25">Mild (0.25 kg / week)</option>
+        <option value="0.5" selected>Normal (0.5 kg / week)</option>
+        <option value="1">Extreme (1 kg / week)</option>
+      `;
+    } else {
+      rateField.style.display = "none";
+    }
+  }
+
   function calculatePlan() {
     const sex = document.getElementById("sex").value;
     const age = Number(document.getElementById("age").value);
@@ -557,44 +523,30 @@
     const bmr = sex === "male" ? (10 * weight + 6.25 * height - 5 * age + 5) : (10 * weight + 6.25 * height - 5 * age - 161);
     const tdee = bmr * act;
 
-    // Smarter target: % bodyweight per week (weekly kg -> kcal -> daily)
-    const rate = Number(document.getElementById("rate").value || 0);
-    const weeklyKg = weight * (rate / 100);
-    const dailyAdj = (weeklyKg * 7700) / 7; // kcal/day
+    // Weight change logic: 1kg = 7700 kcal
+    const weeklyKgRate = Number(document.getElementById("rate").value || 0);
+    const dailyAdjustment = (weeklyKgRate * 7700) / 7;
 
     let target = tdee;
-    if (goal === "cut") target = tdee - dailyAdj;
-    if (goal === "bulk") target = tdee + dailyAdj;
-    // maintain stays at tdee
-
-    // Split training/rest while keeping weekly average = target
-    const minCal = (sex === "male") ? 1500 : 1200;
-    let bump = bumpVal;
+    if (goal === "cut") target = tdee - dailyAdjustment;
+    if (goal === "bulk") target = tdee + dailyAdjustment;
 
     let trainKcal = target, restKcal = target;
     if (trainDays > 0 && restDays > 0) {
-      // Rest day formula: rest = target - bump*(trainDays/restDays)
-      // Enforce rest >= minCal by reducing bump if needed
-      const maxBump = Math.max(0, (target - minCal) * (restDays / trainDays));
-      bump = Math.min(bump, maxBump);
-
-      trainKcal = target + bump;
-      restKcal = target - (bump * trainDays / restDays);
+      trainKcal = target + bumpVal;
+      restKcal = target - (bumpVal * trainDays / restDays);
     }
 
-    // Macros (simple + gym safe)
     const proteinG = r(weight * 2.2);
-    const fatMinG = r(weight * 0.6);
-    const fatFromPctG = r(trainKcal * 0.25 / 9);
-    const fatG = Math.max(fatMinG, fatFromPctG);
-    const carbsG = Math.max(0, r((trainKcal - proteinG * 4 - fatG * 9) / 4));
+    const fatG = r(trainKcal * 0.25 / 9);
+    const carbsG = r((trainKcal - proteinG * 4 - fatG * 9) / 4);
 
     return {
       goal: goal.toUpperCase(), goalRaw: goal, trainDays, restDays,
       daily: r(target), trainKcal: r(trainKcal), restKcal: r(restKcal),
       tdee: r(tdee), bmr: r(bmr),
       proteinG, carbsG, fatG,
-      weight, kgPerWeek: ( (trainDays*trainKcal + restDays*restKcal) - (tdee*7) ) / 7700
+      weight, kgPerWeek: goal === "cut" ? -weeklyKgRate : (goal === "bulk" ? weeklyKgRate : 0)
     };
   }
 
@@ -693,155 +645,20 @@
         }
       });
     });
-    syncRateUI();
   }
-
-
-  // --- Rate UI updates (label + options) ---
-  function syncRateUI() {
-    const rateSel = document.getElementById("rate");
-    const label = document.getElementById("rateLabel");
-    const hint = document.getElementById("rateHint");
-
-    if (goal === "cut") {
-      label.textContent = "Cut Rate (% bodyweight / week)";
-      hint.textContent = "Faster cut = bigger deficit. 0.5%/wk is a solid default for most lifters.";
-      // ensure cut options
-      setRateOptions([
-        {v:0.25, t:"Easy (0.25%)"},
-        {v:0.5,  t:"Standard (0.5%)"},
-        {v:0.75, t:"Aggressive (0.75%)"}
-      ], 0.5);
-      rateSel.disabled = false;
-    } else if (goal === "bulk") {
-      label.textContent = "Lean Bulk Rate (% bodyweight / week)";
-      hint.textContent = "Keep it small to stay lean. 0.25%/wk is usually plenty.";
-      setRateOptions([
-        {v:0.25, t:"Lean (0.25%)"},
-        {v:0.5,  t:"Faster (0.5%)"}
-      ], 0.25);
-      rateSel.disabled = false;
-    } else {
-      label.textContent = "Rate";
-      hint.textContent = "Maintenance keeps you around your TDEE.";
-      setRateOptions([{v:0, t:"Maintenance (0%)"}], 0);
-      rateSel.disabled = true;
-    }
-  }
-
-  function setRateOptions(opts, fallback) {
-    const rateSel = document.getElementById("rate");
-    const current = Number(rateSel.value || fallback);
-    rateSel.innerHTML = opts.map(o => `<option value="${o.v}">${o.t}</option>`).join("");
-    const values = opts.map(o => Number(o.v));
-    rateSel.value = values.includes(current) ? String(current) : String(fallback);
-  }
-
-  // --- Screenshot mode ---
-  let ssTimer = null;
-  function toggleScreenshotMode(force) {
-    const on = (typeof force === "boolean") ? force : !document.body.classList.contains("screenshot");
-    document.body.classList.toggle("screenshot", on);
-
-    const bar = document.getElementById("ssBar");
-    if (on) {
-      bar.style.opacity = "1";
-      bar.style.pointerEvents = "auto";
-      bar.style.transform = "translateX(-50%) translateY(0)";
-      autoHideSsBar();
-      // jump to results
-      if (!document.getElementById("results").classList.contains("visible")) calculateAndShow();
-      setTimeout(()=>document.getElementById("results").scrollIntoView({behavior:"smooth", block:"start"}), 150);
-    } else {
-      clearTimeout(ssTimer);
-      bar.style.opacity = "0";
-      bar.style.pointerEvents = "none";
-      bar.style.transform = "translateX(-50%) translateY(18px)";
-    }
-  }
-
-  function autoHideSsBar() {
-    clearTimeout(ssTimer);
-    const bar = document.getElementById("ssBar");
-    ssTimer = setTimeout(() => {
-      bar.style.opacity = "0";
-      bar.style.pointerEvents = "none";
-      bar.style.transform = "translateX(-50%) translateY(18px)";
-    }, 1700);
-  }
-
-  // Tap anywhere in screenshot mode to show the bar again
-  document.addEventListener("click", (e) => {
-    if (!document.body.classList.contains("screenshot")) return;
-    if (e.target.closest("#ssBar")) return;
-    const bar = document.getElementById("ssBar");
-    bar.style.opacity = "1";
-    bar.style.pointerEvents = "auto";
-    bar.style.transform = "translateX(-50%) translateY(0)";
-    autoHideSsBar();
-  });
-
-  // --- Install as PWA (Android/desktop prompt + iOS instructions) ---
-  let deferredPrompt = null;
-
-  window.addEventListener("beforeinstallprompt", (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-  });
-
-  function isIOS() {
-    return /iphone|ipad|ipod/i.test(navigator.userAgent);
-  }
-  function isInStandalone() {
-    return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
-  }
-
-  async function installApp() {
-    if (isInStandalone()) {
-      showToast("Already installed ✓");
-      return;
-    }
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      deferredPrompt = null;
-      showToast(choice?.outcome === "accepted" ? "Installed ✓" : "Install dismissed");
-      return;
-    }
-    if (isIOS()) {
-      alert("On iPhone: Share → Add to Home Screen to install.");
-      return;
-    }
-    alert("Install prompt isn't available yet. Try in Chrome/Edge, then use the Install button in the browser menu.");
-  }
-
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
-    setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 1800);
-  }
-
-  // --- Service worker (PWA offline shell) ---
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch(()=>{});
-    });
-    syncRateUI();
-  }
-
-  // Initial sync
-  syncRateUI();
-
 
   function copyPlan() {
     const p = lastPlan;
-    const text = `Bodyfuelcalculator (${p.goal})\nDaily: ${p.daily} kcal\nTrain: ${p.trainKcal} kcal\nRest: ${p.restKcal} kcal\nMacros: P ${p.proteinG}g | C ${p.carbsG}g | F ${p.fatG}g`;
+    const text = `Bodyfuelcalculator Plan (${p.goal})\nDaily: ${p.daily} kcal\nTrain: ${p.trainKcal} kcal\nRest: ${p.restKcal} kcal\nMacros: P ${p.proteinG}g | C ${p.carbsG}g | F ${p.fatG}g`;
     navigator.clipboard.writeText(text).then(() => {
-      showToast("Copied ✓");
+      const t = document.getElementById("toast");
+      t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
+      setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 2000);
     });
-    syncRateUI();
   }
+
+  // Initial UI sync
+  syncRateUI();
 </script>
 </body>
 </html>
