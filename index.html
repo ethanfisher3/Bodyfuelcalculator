@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ShredCalc — Enhanced</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>ShredCalc — Pro</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
@@ -22,7 +22,7 @@
       --r2: 14px;
       --shadow: 0 20px 60px rgba(0,0,0,.55);
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
     html { scroll-behavior: smooth; }
     body {
       font-family: -apple-system, system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -31,10 +31,11 @@
         radial-gradient(ellipse 900px 500px at 50% -100px, rgba(124,106,247,.18), transparent 65%),
         var(--bg);
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
     /* ── Layout ── */
-    .wrap { max-width: 1020px; margin: 0 auto; padding: 20px 16px 60px; }
+    .wrap { max-width: 1020px; margin: 0 auto; padding: 20px 16px 60px; width: 100%; }
 
     /* ── Top bar ── */
     .topbar {
@@ -70,9 +71,9 @@
     .hero p { color: var(--muted); font-size: 15px; line-height: 1.6; max-width: 58ch; }
 
     /* ── Two-column layout ── */
-    .layout { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 720px) {
-      .layout { grid-template-columns: 380px 1fr; align-items: start; }
+    .layout { display: grid; gap: 20px; grid-template-columns: 1fr; }
+    @media (min-width: 840px) {
+      .layout { grid-template-columns: 400px 1fr; align-items: start; }
     }
 
     /* ── Card ── */
@@ -83,6 +84,7 @@
       padding: 20px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
+      width: 100%;
     }
     .card-title {
       font-size: 11px; font-weight: 900; letter-spacing: .14em;
@@ -91,17 +93,16 @@
     }
 
     /* ── Form elements ── */
-    .field { margin-bottom: 12px; }
+    .field { margin-bottom: 16px; }
     .field label {
       display: block; font-size: 12px; font-weight: 800;
-      color: var(--muted); letter-spacing: .04em; margin-bottom: 6px;
+      color: var(--muted); letter-spacing: .04em; margin-bottom: 8px;
     }
-    .input-wrap { position: relative; }
     input[type="number"], select {
-      width: 100%; padding: 12px 14px;
+      width: 100%; padding: 14px;
       border-radius: var(--r2); border: 1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.05); color: var(--text);
-      font-size: 15px; outline: none; appearance: none;
+      font-size: 16px; outline: none; appearance: none;
       transition: border-color .15s ease, background .15s ease;
     }
     input[type="number"]:focus, select:focus {
@@ -110,7 +111,7 @@
     }
     .select-wrap { position: relative; }
     .select-wrap::after {
-      content: "▾"; position: absolute; right: 13px; top: 50%;
+      content: "▾"; position: absolute; right: 14px; top: 50%;
       transform: translateY(-50%); color: var(--muted); pointer-events: none;
     }
 
@@ -122,17 +123,35 @@
       border-radius: 14px; padding: 5px;
     }
     .seg button {
-      flex: 1; padding: 10px 8px;
+      flex: 1; padding: 12px 8px;
       border-radius: 10px; border: 0;
       background: transparent; color: var(--muted);
       font-weight: 900; font-size: 14px; cursor: pointer;
       transition: all .15s ease;
     }
-    .seg button:hover:not(.active) { background: rgba(255,255,255,.06); color: var(--text); }
     .seg button.active { background: rgba(255,255,255,.92); color: #0b0f17; }
     .seg button.active.cut { background: linear-gradient(135deg, #fc8181, #f56565); color: #fff; }
     .seg button.active.maintain { background: linear-gradient(135deg, #68d391, #48bb78); color: #fff; }
     .seg button.active.bulk { background: linear-gradient(135deg, #f6ad55, #ed8936); color: #fff; }
+
+    /* ── Day Picker ── */
+    .day-picker {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
+      margin-top: 8px;
+    }
+    .day-btn {
+      aspect-ratio: 1; border-radius: 10px; border: 1px solid var(--card-border);
+      background: rgba(255,255,255,.04); color: var(--muted);
+      font-size: 11px; font-weight: 900; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: all .15s ease;
+    }
+    .day-btn .d-name { margin-bottom: 2px; }
+    .day-btn .d-status { font-size: 8px; opacity: .6; }
+    .day-btn.active {
+      background: rgba(124,106,247,.2); border-color: var(--accent); color: #fff;
+    }
+    .day-btn.active .d-status { opacity: 1; }
 
     /* ── Tabs ── */
     .tabs {
@@ -142,7 +161,7 @@
       border-radius: 14px; padding: 5px;
     }
     .tabs button {
-      flex: 1; padding: 10px 8px;
+      flex: 1; padding: 12px 8px;
       border-radius: 10px; border: 0;
       background: transparent; color: var(--muted);
       font-weight: 900; font-size: 13px; cursor: pointer;
@@ -151,7 +170,7 @@
     .tabs button.active { background: rgba(255,255,255,.92); color: #0b0f17; }
 
     /* ── Panel animation ── */
-    .panel-wrap { position: relative; min-height: 100px; margin-bottom: 4px; }
+    .panel-wrap { position: relative; min-height: 120px; margin-bottom: 4px; }
     .panel {
       position: absolute; inset: 0;
       opacity: 0; transform: translateX(10px);
@@ -163,55 +182,78 @@
 
     /* ── CTA ── */
     .cta {
-      width: 100%; margin-top: 14px; padding: 15px 14px;
+      width: 100%; margin-top: 14px; padding: 18px 14px;
       border-radius: 16px; border: 0;
       background: linear-gradient(135deg, var(--accent), #a78bfa);
-      color: #fff; font-weight: 900; font-size: 16px;
+      color: #fff; font-weight: 900; font-size: 17px;
       cursor: pointer; letter-spacing: -.01em;
       box-shadow: 0 8px 28px rgba(124,106,247,.4);
-      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      transition: all .2s cubic-bezier(.4,0,.2,1);
     }
-    .cta:hover { filter: brightness(1.08); box-shadow: 0 12px 36px rgba(124,106,247,.55); }
-    .cta:active { transform: scale(.99); }
+    .cta:hover { filter: brightness(1.08); transform: translateY(-2px); box-shadow: 0 12px 36px rgba(124,106,247,.55); }
+    .cta:active { transform: scale(.97); }
 
-    .hint { margin-top: 8px; color: var(--muted2); font-size: 12px; line-height: 1.5; }
+    .hint { margin-top: 10px; color: var(--muted2); font-size: 12px; line-height: 1.5; }
 
     /* ── Results panel ── */
-    #results { display: none; }
-    #results.visible { display: block; }
+    #results { display: none; width: 100%; }
+    #results.visible { display: block; animation: slideUp .6s cubic-bezier(.2,1,.3,1) forwards; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     /* ── Big number ── */
     .result-hero {
       background: linear-gradient(135deg, rgba(124,106,247,.2), rgba(79,209,197,.15));
       border: 1px solid rgba(124,106,247,.3);
-      border-radius: 18px; padding: 20px;
+      border-radius: 18px; padding: 24px 20px;
       margin-bottom: 14px; text-align: center;
     }
-    .result-label { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .result-label { font-size: 11px; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
     .result-big { font-size: 72px; font-weight: 1000; letter-spacing: -.05em; line-height: 1; }
     .result-big span { font-size: 18px; font-weight: 700; color: var(--muted); margin-left: 4px; }
-    .result-meta { font-size: 13px; color: var(--muted); margin-top: 8px; }
+    .result-meta { font-size: 13px; color: var(--muted); margin-top: 10px; }
 
     /* ── Stat grid ── */
-    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
     .stat-box {
       background: rgba(255,255,255,.05);
       border: 1px solid var(--card-border);
-      border-radius: 14px; padding: 14px;
+      border-radius: 14px; padding: 16px;
     }
-    .stat-box .t { font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+    .stat-box .t { font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
     .stat-box .v { font-size: 24px; font-weight: 1000; letter-spacing: -.03em; }
     .stat-box .v.train { color: var(--accent); }
     .stat-box .v.rest { color: var(--accent2); }
     .stat-box .v.tdee { color: #f6ad55; }
     .stat-box .v.bmr { color: #fc8181; }
 
+    /* ── Tooltip Fix for Mobile ── */
+    .tooltip-wrap { position: relative; }
+    .tooltip-icon {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: rgba(255,255,255,.12); color: var(--muted);
+      font-size: 12px; font-weight: 900; cursor: pointer;
+      display: inline-grid; place-items: center;
+    }
+    .tooltip-text {
+      display: none; position: absolute; bottom: 140%; right: 0;
+      background: #1a2035; border: 1px solid var(--card-border); color: var(--text);
+      font-size: 13px; line-height: 1.5; padding: 12px 16px;
+      border-radius: 12px; width: 220px; z-index: 100;
+      box-shadow: 0 8px 32px rgba(0,0,0,.6);
+    }
+    .tooltip-wrap:active .tooltip-text,
+    .tooltip-wrap:hover .tooltip-text { display: block; }
+
     /* ── Notes ── */
     .notes {
       background: rgba(255,255,255,.04);
       border: 1px solid var(--card-border);
-      border-left: 3px solid var(--accent);
-      border-radius: 14px; padding: 14px;
+      border-left: 4px solid var(--accent);
+      border-radius: 14px; padding: 16px;
       color: var(--muted); font-size: 14px; line-height: 1.6;
       margin-bottom: 14px;
     }
@@ -223,116 +265,79 @@
     .chart-card {
       background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.025));
       border: 1px solid var(--card-border);
-      border-radius: var(--r); padding: 18px;
+      border-radius: var(--r); padding: 20px;
       box-shadow: var(--shadow);
+      width: 100%; overflow: hidden;
     }
     .chart-card h3 {
       font-size: 11px; font-weight: 900; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--muted); margin-bottom: 14px;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 16px;
     }
-    .chart-wrap { position: relative; height: 200px; }
-    .chart-wrap-tall { position: relative; height: 240px; }
+    .chart-wrap { position: relative; height: 200px; width: 100%; }
+    .chart-wrap-tall { position: relative; height: 240px; width: 100%; }
 
-    /* ── Weekly breakdown ── */
-    .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 14px; }
-    .day-pill {
-      border-radius: 10px; padding: 8px 4px;
-      text-align: center; font-size: 11px; font-weight: 900;
-      transition: transform .12s ease;
-    }
-    .day-pill:hover { transform: translateY(-2px); }
-    .day-pill .day-name { font-size: 10px; color: var(--muted); margin-bottom: 4px; letter-spacing: .06em; }
-    .day-pill .day-kcal { font-size: 13px; font-weight: 1000; }
-    .day-pill.train-day { background: rgba(124,106,247,.18); border: 1px solid rgba(124,106,247,.3); }
-    .day-pill.rest-day { background: rgba(79,209,197,.12); border: 1px solid rgba(79,209,197,.25); }
-
-    /* ── Macro estimate ── */
-    .macro-row { display: flex; gap: 8px; margin-top: 14px; }
-    .macro-pill {
-      flex: 1; border-radius: 12px; padding: 12px 8px; text-align: center;
-    }
-    .macro-pill .m-name { font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .macro-pill .m-val { font-size: 22px; font-weight: 1000; margin: 4px 0 2px; }
-    .macro-pill .m-g { font-size: 11px; color: var(--muted); }
+    /* ── Macro pill fixes ── */
+    .macro-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 14px; }
+    @media (max-width: 400px) { .macro-row { grid-template-columns: 1fr; } }
+    .macro-pill { border-radius: 12px; padding: 12px 8px; text-align: center; }
+    .macro-pill .m-name { font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .macro-pill .m-val { font-size: 20px; font-weight: 1000; margin: 4px 0 2px; }
+    .macro-pill .m-g { font-size: 10px; color: var(--muted); }
     .macro-pill.protein { background: rgba(245,101,101,.15); border: 1px solid rgba(245,101,101,.3); }
-    .macro-pill.protein .m-val { color: #fc8181; }
     .macro-pill.carbs { background: rgba(246,173,85,.12); border: 1px solid rgba(246,173,85,.28); }
-    .macro-pill.carbs .m-val { color: #f6ad55; }
     .macro-pill.fat { background: rgba(104,211,145,.12); border: 1px solid rgba(104,211,145,.28); }
-    .macro-pill.fat .m-val { color: #68d391; }
 
-    /* ── Progress bar ── */
-    .progress-bar-wrap { margin-top: 8px; }
-    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 5px; }
-    .progress-bar { height: 8px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
-    .progress-fill { height: 100%; border-radius: 999px; transition: width .6s cubic-bezier(.4,0,.2,1); }
-
-    /* ── Share/save bar ── */
-    .action-bar {
-      display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;
-    }
+    /* ── Action buttons ── */
+    .action-bar { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
     .action-btn {
-      flex: 1; min-width: 120px; padding: 12px 14px;
+      flex: 1; min-width: 140px; padding: 14px;
       border-radius: 14px; border: 1px solid var(--card-border);
       background: rgba(255,255,255,.06); color: var(--text);
-      font-weight: 800; font-size: 13px; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 7px;
-      transition: background .15s ease, transform .12s ease;
+      font-weight: 800; font-size: 14px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: all .15s ease;
     }
-    .action-btn:hover { background: rgba(255,255,255,.10); }
-    .action-btn:active { transform: scale(.98); }
-
-    /* ── Tooltip ── */
-    .tooltip-wrap { position: relative; display: inline-block; }
-    .tooltip-icon {
-      width: 16px; height: 16px; border-radius: 50%;
-      background: rgba(255,255,255,.12); color: var(--muted);
-      font-size: 10px; font-weight: 900; cursor: help;
-      display: inline-grid; place-items: center; margin-left: 5px;
-      vertical-align: middle;
-    }
-    .tooltip-text {
-      display: none; position: absolute; bottom: 130%; left: 50%;
-      transform: translateX(-50%); background: #1a2035;
-      border: 1px solid var(--card-border); color: var(--text);
-      font-size: 12px; line-height: 1.5; padding: 8px 12px;
-      border-radius: 10px; width: 200px; z-index: 100;
-      box-shadow: 0 8px 24px rgba(0,0,0,.4);
-    }
-    .tooltip-wrap:hover .tooltip-text { display: block; }
+    .action-btn:active { transform: scale(.95); background: rgba(255,255,255,.12); }
 
     /* ── Divider ── */
-    .divider { height: 1px; background: var(--card-border); margin: 18px 0; }
+    .divider { height: 1px; background: var(--card-border); margin: 24px 0; }
 
     /* ── Section heading ── */
     .section-heading {
-      font-size: 22px; font-weight: 900; letter-spacing: -.03em;
-      margin-bottom: 14px; margin-top: 28px;
+      font-size: 24px; font-weight: 900; letter-spacing: -.03em;
+      margin-bottom: 16px; margin-top: 32px;
     }
     .section-heading span { color: var(--accent); }
 
-    /* ── Animated number ── */
-    @keyframes countUp {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-in { animation: countUp .35s ease forwards; }
-
     /* ── Footer ── */
     .footer {
-      margin-top: 48px; padding-top: 20px;
+      margin-top: 60px; padding-top: 24px;
       border-top: 1px solid var(--card-border);
       display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 10px;
+      flex-wrap: wrap; gap: 12px;
       color: var(--muted2); font-size: 12px;
     }
 
-    /* ── Responsive ── */
+    /* ── Progress bar ── */
+    .progress-bar-wrap { margin-top: 10px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .progress-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 999px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+
+    /* ── Animations ── */
+    .stagger-in > * { opacity: 0; transform: translateY(20px); }
+    .visible .stagger-in > *:nth-child(1) { animation: slideUp .5s .1s forwards; }
+    .visible .stagger-in > *:nth-child(2) { animation: slideUp .5s .2s forwards; }
+    .visible .stagger-in > *:nth-child(3) { animation: slideUp .5s .3s forwards; }
+    .visible .stagger-in > *:nth-child(4) { animation: slideUp .5s .4s forwards; }
+
+    /* ── Mobile Tweaks ── */
     @media (max-width: 480px) {
-      .stat-grid { grid-template-columns: 1fr 1fr; }
-      .result-big { font-size: 56px; }
-      .week-grid { grid-template-columns: repeat(7, 1fr); gap: 4px; }
-      .day-pill .day-kcal { font-size: 11px; }
+      .wrap { padding: 16px 12px 40px; }
+      .stat-grid { grid-template-columns: 1fr; }
+      .result-big { font-size: 60px; }
+      .day-picker { gap: 4px; }
+      .day-btn { font-size: 10px; border-radius: 8px; }
     }
   </style>
 </head>
@@ -349,13 +354,13 @@
         <div class="brand-tag">Calorie plan for lifters</div>
       </div>
     </div>
-    <div class="badge">Enhanced</div>
+    <div class="badge">Pro</div>
   </div>
 
   <!-- Hero -->
   <div class="hero">
     <h1>Your Personal <span>Gym Plan</span></h1>
-    <p>Enter your stats below to get a science-backed calorie plan with visual breakdowns, macro estimates, and a weekly schedule tailored to your training goal.</p>
+    <p>Custom training day selection, interactive charts, and science-backed calorie breakdowns for your specific goals.</p>
   </div>
 
   <!-- Two-column layout -->
@@ -375,8 +380,8 @@
         </div>
       </div>
 
-      <!-- Sex + Weight -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <!-- Stats Grid -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
         <div class="field">
           <label>Sex</label>
           <div class="select-wrap">
@@ -388,268 +393,232 @@
         </div>
         <div class="field">
           <label>Weight (kg)</label>
-          <input id="weight" type="number" min="35" max="250" step="0.1" value="70" oninput="liveCalc()"/>
+          <input id="weight" type="number" min="35" max="250" step="0.1" value="70"/>
         </div>
-      </div>
-
-      <!-- Height + Age -->
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
         <div class="field">
           <label>Height (cm)</label>
-          <input id="height" type="number" min="120" max="230" value="175" oninput="liveCalc()"/>
+          <input id="height" type="number" min="120" max="230" value="175"/>
         </div>
         <div class="field">
           <label>Age</label>
-          <input id="age" type="number" min="10" max="120" value="25" oninput="liveCalc()"/>
+          <input id="age" type="number" min="10" max="120" value="25"/>
         </div>
       </div>
 
       <!-- Tabs -->
       <div class="tabs">
-        <button id="tabAct" class="active" onclick="setTab('activity')">Activity & Days</button>
-        <button id="tabInt" onclick="setTab('intensity')">Intensity</button>
+        <button id="tabAct" class="active" onclick="setTab('activity')">Training Days</button>
+        <button id="tabInt" onclick="setTab('intensity')">Activity & Intensity</button>
       </div>
 
       <div class="panel-wrap">
-        <!-- Activity & Days panel -->
+        <!-- Training Days panel -->
         <div id="panelAct" class="panel active from-left">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-            <div class="field">
-              <label>Activity level</label>
-              <div class="select-wrap">
-                <select id="activity" onchange="liveCalc()">
-                  <option value="1.2">Sedentary</option>
-                  <option value="1.375">Light (1–3/wk)</option>
-                  <option value="1.55" selected>Moderate (3–5/wk)</option>
-                  <option value="1.725">Very active (6–7/wk)</option>
-                  <option value="1.9">Athlete (2×/day)</option>
-                </select>
-              </div>
+          <div class="field">
+            <label>Select Training Days</label>
+            <div class="day-picker" id="dayPicker">
+              <button class="day-btn active" data-day="0"><span class="d-name">Mon</span><span class="d-status">Train</span></button>
+              <button class="day-btn" data-day="1"><span class="d-name">Tue</span><span class="d-status">Rest</span></button>
+              <button class="day-btn active" data-day="2"><span class="d-name">Wed</span><span class="d-status">Train</span></button>
+              <button class="day-btn" data-day="3"><span class="d-name">Thu</span><span class="d-status">Rest</span></button>
+              <button class="day-btn active" data-day="4"><span class="d-name">Fri</span><span class="d-status">Train</span></button>
+              <button class="day-btn active" data-day="5"><span class="d-name">Sat</span><span class="d-status">Train</span></button>
+              <button class="day-btn" data-day="6"><span class="d-name">Sun</span><span class="d-status">Rest</span></button>
             </div>
-            <div class="field">
-              <label>Training days/week</label>
-              <div class="select-wrap">
-                <select id="trainDays" onchange="liveCalc()">
-                  <option>0</option><option>1</option><option>2</option><option>3</option>
-                  <option selected>4</option><option>5</option><option>6</option><option>7</option>
-                </select>
-              </div>
-            </div>
+            <div class="hint">Tap days to toggle between Training and Rest.</div>
           </div>
-          <div class="hint">Sets your baseline weekly energy expenditure.</div>
         </div>
 
-        <!-- Intensity panel -->
+        <!-- Activity & Intensity panel -->
         <div id="panelInt" class="panel from-right">
           <div class="field">
-            <label>Training intensity</label>
+            <label>Daily Activity Level</label>
             <div class="select-wrap">
-              <select id="intensity" onchange="liveCalc()">
-                <option value="light">Light (+120 kcal bump)</option>
-                <option value="moderate" selected>Moderate (+180 kcal bump)</option>
-                <option value="hard">Hard (+240 kcal bump)</option>
-                <option value="veryhard">Very hard (+300 kcal bump)</option>
+              <select id="activity">
+                <option value="1.2">Sedentary (No exercise)</option>
+                <option value="1.375">Lightly Active</option>
+                <option value="1.55" selected>Moderately Active</option>
+                <option value="1.725">Very Active</option>
+                <option value="1.9">Extra Active</option>
               </select>
             </div>
           </div>
-          <div class="hint">Higher intensity = bigger training day calorie bump.</div>
+          <div class="field">
+            <label>Training Intensity</label>
+            <div class="select-wrap">
+              <select id="intensity">
+                <option value="light">Light (+120 kcal)</option>
+                <option value="moderate" selected>Moderate (+180 kcal)</option>
+                <option value="hard">Hard (+240 kcal)</option>
+                <option value="veryhard">Very hard (+300 kcal)</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
       <button class="cta" onclick="calculateAndShow()">🧮 Calculate My Plan</button>
-      <div class="hint" style="text-align:center;">Based on the Mifflin–St Jeor equation</div>
     </div>
 
     <!-- RIGHT: Results -->
     <div id="results">
+      <div class="stagger-in">
+        <!-- Big number -->
+        <div class="result-hero card" id="resultHero">
+          <div class="result-label" id="rLabel">Daily Target</div>
+          <div class="result-big" id="rDaily">—<span>kcal/day</span></div>
+          <div class="result-meta" id="rMeta">—</div>
+        </div>
 
-      <!-- Big number -->
-      <div class="result-hero card" id="resultHero">
-        <div class="result-label" id="rLabel">Daily Target</div>
-        <div class="result-big animate-in" id="rDaily">—<span>kcal/day</span></div>
-        <div class="result-meta" id="rMeta">—</div>
+        <!-- Stat grid -->
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="t">Training Day
+              <div class="tooltip-wrap">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Higher calories to fuel your workouts and recovery.</span>
+              </div>
+            </div>
+            <div class="v train" id="rTrain">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="t">Rest Day
+              <div class="tooltip-wrap">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Lower calories on rest days to maintain your deficit or surplus.</span>
+              </div>
+            </div>
+            <div class="v rest" id="rRest">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="t">TDEE
+              <div class="tooltip-wrap">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Total Daily Energy Expenditure: how many calories you burn per day.</span>
+              </div>
+            </div>
+            <div class="v tdee" id="rTdee">—</div>
+          </div>
+          <div class="stat-box">
+            <div class="t">BMR
+              <div class="tooltip-wrap">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">Basal Metabolic Rate: calories burned at complete rest.</span>
+              </div>
+            </div>
+            <div class="v bmr" id="rBmr">—</div>
+          </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="notes" id="rNotes">—</div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <button class="action-btn" onclick="copyPlan()">📋 Copy Plan</button>
+          <button class="action-btn" onclick="printPlan()">🖨️ Save PDF</button>
+        </div>
       </div>
-
-      <!-- Stat grid -->
-      <div class="stat-grid">
-        <div class="stat-box">
-          <div class="t">Training Day
-            <span class="tooltip-wrap">
-              <span class="tooltip-icon">?</span>
-              <span class="tooltip-text">Calories on days you train. Higher to fuel performance.</span>
-            </span>
-          </div>
-          <div class="v train" id="rTrain">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="t">Rest Day
-            <span class="tooltip-wrap">
-              <span class="tooltip-icon">?</span>
-              <span class="tooltip-text">Calories on rest days. Lower since energy demand is reduced.</span>
-            </span>
-          </div>
-          <div class="v rest" id="rRest">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="t">TDEE
-            <span class="tooltip-wrap">
-              <span class="tooltip-icon">?</span>
-              <span class="tooltip-text">Total Daily Energy Expenditure — calories burned including activity.</span>
-            </span>
-          </div>
-          <div class="v tdee" id="rTdee">—</div>
-        </div>
-        <div class="stat-box">
-          <div class="t">BMR
-            <span class="tooltip-wrap">
-              <span class="tooltip-icon">?</span>
-              <span class="tooltip-text">Basal Metabolic Rate — calories burned at complete rest.</span>
-            </span>
-          </div>
-          <div class="v bmr" id="rBmr">—</div>
-        </div>
-      </div>
-
-      <!-- Notes -->
-      <div class="notes" id="rNotes">—</div>
-
-      <!-- Action bar -->
-      <div class="action-bar">
-        <button class="action-btn" onclick="copyPlan()">📋 Copy Plan</button>
-        <button class="action-btn" onclick="printPlan()">🖨️ Print / Save PDF</button>
-        <button class="action-btn" onclick="sharePlan()">🔗 Share Link</button>
-      </div>
-
     </div>
   </div>
 
-  <!-- Charts section (shown after calculation) -->
+  <!-- Charts section -->
   <div id="chartsSection" style="display:none;">
-
     <div class="section-heading">Visual <span>Breakdown</span></div>
-
+    
     <div class="charts-grid">
-
-      <!-- Calorie comparison bar chart -->
       <div class="chart-card">
         <h3>Calorie Comparison</h3>
-        <div class="chart-wrap">
-          <canvas id="barChart"></canvas>
-        </div>
+        <div class="chart-wrap"><canvas id="barChart"></canvas></div>
       </div>
-
-      <!-- BMR vs TDEE vs Target donut -->
       <div class="chart-card">
         <h3>Energy Distribution</h3>
-        <div class="chart-wrap">
-          <canvas id="donutChart"></canvas>
-        </div>
+        <div class="chart-wrap"><canvas id="donutChart"></canvas></div>
       </div>
-
     </div>
 
-    <!-- Weekly schedule -->
     <div class="chart-card" style="margin-top:14px;">
-      <h3>Weekly Schedule — Calories Per Day</h3>
-      <div class="chart-wrap-tall">
-        <canvas id="weekChart"></canvas>
-      </div>
-      <div class="week-grid" id="weekGrid"></div>
+      <h3>Weekly Calorie Schedule</h3>
+      <div class="chart-wrap-tall"><canvas id="weekChart"></canvas></div>
     </div>
 
-    <!-- Macro estimate -->
     <div class="chart-card" style="margin-top:14px;">
-      <h3>Estimated Macros (Training Day)</h3>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:center;">
-        <div>
-          <div class="chart-wrap">
-            <canvas id="macroChart"></canvas>
+      <h3>Macros (Training Day)</h3>
+      <div class="charts-grid" style="grid-template-columns: 1fr; align-items: center;">
+        <div class="chart-wrap" style="height: 180px;"><canvas id="macroChart"></canvas></div>
+        <div class="macro-row">
+          <div class="macro-pill protein">
+            <div class="m-name">Protein</div>
+            <div class="m-val" id="mProtein">—</div>
+            <div class="m-g">grams</div>
           </div>
-        </div>
-        <div>
-          <div class="macro-row" style="flex-direction:column; gap:8px; margin-top:0;">
-            <div class="macro-pill protein">
-              <div class="m-name">Protein</div>
-              <div class="m-val" id="mProtein">—</div>
-              <div class="m-g">grams</div>
-            </div>
-            <div class="macro-pill carbs">
-              <div class="m-name">Carbs</div>
-              <div class="m-val" id="mCarbs">—</div>
-              <div class="m-g">grams</div>
-            </div>
-            <div class="macro-pill fat">
-              <div class="m-name">Fat</div>
-              <div class="m-val" id="mFat">—</div>
-              <div class="m-g">grams</div>
-            </div>
+          <div class="macro-pill carbs">
+            <div class="m-name">Carbs</div>
+            <div class="m-val" id="mCarbs">—</div>
+            <div class="m-g">grams</div>
+          </div>
+          <div class="macro-pill fat">
+            <div class="m-name">Fat</div>
+            <div class="m-val" id="mFat">—</div>
+            <div class="m-g">grams</div>
           </div>
         </div>
       </div>
-      <!-- Macro progress bars -->
-      <div style="margin-top:14px;">
+      <div style="margin-top:20px;">
         <div class="progress-bar-wrap">
           <div class="progress-label"><span>Protein</span><span id="pProteinPct">—</span></div>
           <div class="progress-bar"><div class="progress-fill" id="pProteinBar" style="background:#fc8181; width:0%"></div></div>
         </div>
-        <div class="progress-bar-wrap" style="margin-top:8px;">
+        <div class="progress-bar-wrap">
           <div class="progress-label"><span>Carbs</span><span id="pCarbsPct">—</span></div>
           <div class="progress-bar"><div class="progress-fill" id="pCarbsBar" style="background:#f6ad55; width:0%"></div></div>
         </div>
-        <div class="progress-bar-wrap" style="margin-top:8px;">
+        <div class="progress-bar-wrap">
           <div class="progress-label"><span>Fat</span><span id="pFatPct">—</span></div>
           <div class="progress-bar"><div class="progress-fill" id="pFatBar" style="background:#68d391; width:0%"></div></div>
         </div>
       </div>
     </div>
 
-    <!-- Weight projection -->
     <div class="chart-card" style="margin-top:14px;">
-      <h3>Estimated 12-Week Weight Projection</h3>
-      <div class="chart-wrap-tall">
-        <canvas id="projChart"></canvas>
-      </div>
-      <div class="hint" style="margin-top:8px;">Projection assumes consistent adherence. Adjust ±150 kcal if scale doesn't move.</div>
+      <h3>12-Week Weight Projection</h3>
+      <div class="chart-wrap-tall"><canvas id="projChart"></canvas></div>
     </div>
-
   </div>
 
-  <!-- Footer -->
   <div class="footer">
-    <div>ShredCalc Enhanced — Based on Mifflin–St Jeor equation</div>
-    <div>Results are estimates. Consult a professional for medical advice.</div>
+    <div>ShredCalc Pro — Mifflin–St Jeor Formula</div>
+    <div>Results are estimates. Consult a professional.</div>
   </div>
-
 </div>
 
-<!-- Toast -->
-<div id="toast" style="
-  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px);
-  background:#1a2035; border:1px solid rgba(124,106,247,.4); color:var(--text);
-  padding:12px 24px; border-radius:999px; font-size:14px; font-weight:800;
-  box-shadow:0 8px 32px rgba(0,0,0,.4); transition:transform .3s ease, opacity .3s ease;
-  opacity:0; pointer-events:none; z-index:9999; white-space:nowrap;
-">Copied!</div>
+<div id="toast" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(80px); background:#1a2035; border:1px solid var(--accent); color:#fff; padding:12px 24px; border-radius:999px; font-size:14px; font-weight:800; box-shadow:0 8px 32px rgba(0,0,0,.4); transition:all .3s ease; opacity:0; pointer-events:none; z-index:9999;">Copied!</div>
 
 <script>
-  // ── State ──
   let goal = "cut";
   let currentTab = "activity";
-  let barChartInst = null, donutChartInst = null, weekChartInst = null, macroChartInst = null, projChartInst = null;
+  let isTrainDay = [true, false, true, false, true, true, false];
+  let charts = {};
   let lastPlan = null;
 
-  // ── Goal selector ──
+  // Day Picker Init
+  document.querySelectorAll('.day-btn').forEach((btn, i) => {
+    btn.addEventListener('click', () => {
+      isTrainDay[i] = !isTrainDay[i];
+      btn.classList.toggle('active', isTrainDay[i]);
+      btn.querySelector('.d-status').textContent = isTrainDay[i] ? 'Train' : 'Rest';
+    });
+  });
+
   function setGoal(g) {
     goal = g;
-    ["cut","maintain","bulk"].forEach(id => {
-      const btn = document.getElementById("g" + id.charAt(0).toUpperCase() + id.slice(1));
-      btn.classList.toggle("active", id === g);
+    ['cut','maintain','bulk'].forEach(id => {
+      const btn = document.getElementById('g' + id.charAt(0).toUpperCase() + id.slice(1));
+      btn.classList.toggle('active', id === g);
       btn.classList.toggle(id, id === g);
     });
-    liveCalc();
   }
 
-  // ── Tab switcher ──
   function setTab(which) {
     if (which === currentTab) return;
     const goingInt = which === "intensity";
@@ -658,9 +627,7 @@
     const pA = document.getElementById("panelAct");
     const pI = document.getElementById("panelInt");
     if (goingInt) {
-      pA.classList.remove("from-left"); pA.classList.add("from-left");
       pA.classList.remove("active");
-      pI.classList.remove("from-right"); pI.classList.add("from-right");
       pI.classList.add("active");
     } else {
       pI.classList.remove("active");
@@ -669,87 +636,51 @@
     currentTab = which;
   }
 
-  // ── Helpers ──
   function r(n) { return Math.round(n); }
-  function clamp(n, min, max) { return Math.min(max, Math.max(min, n)); }
-  function intensityBump(i) { return {light:120, moderate:180, hard:240, veryhard:300}[i] || 180; }
   function goalColor(g) { return g==="cut" ? "#f56565" : g==="bulk" ? "#f6ad55" : "#68d391"; }
-  function goalName(g) { return g==="cut" ? "CUT" : g==="bulk" ? "BULK" : "MAINTAIN"; }
 
-  // ── Core calculation ──
   function calculatePlan() {
     const sex = document.getElementById("sex").value;
     const age = Number(document.getElementById("age").value);
     const height = Number(document.getElementById("height").value);
     const weight = Number(document.getElementById("weight").value);
     const activity = Number(document.getElementById("activity").value);
-    const trainDays = clamp(Number(document.getElementById("trainDays").value), 0, 7);
     const intensity = document.getElementById("intensity").value;
+    const trainDays = isTrainDay.filter(d => d).length;
+    const restDays = 7 - trainDays;
 
-    if (!age || !height || !weight || age < 10 || height < 120 || weight < 35) return null;
+    if (!age || !height || !weight) return null;
 
-    const base = 10 * weight + 6.25 * height - 5 * age;
-    const bmr = sex === "male" ? base + 5 : base - 161;
+    const bmr = sex === "male" ? (10 * weight + 6.25 * height - 5 * age + 5) : (10 * weight + 6.25 * height - 5 * age - 161);
     const tdee = bmr * activity;
 
     let target = tdee;
-    if (goal === "cut") target = tdee - 400;
+    if (goal === "cut") target = tdee - 450;
     if (goal === "bulk") target = tdee + 300;
-    target = Math.max(0, target);
 
-    const restDays = 7 - trainDays;
-    const bump = intensityBump(intensity);
-    let trainCals = target, restCals = target;
+    const bump = {light:120, moderate:180, hard:240, veryhard:300}[intensity];
+    let trainKcal = target, restKcal = target;
     if (trainDays > 0 && restDays > 0) {
-      trainCals = target + bump;
-      restCals = target - (bump * trainDays / restDays);
+      trainKcal = target + bump;
+      restKcal = target - (bump * trainDays / restDays);
     }
 
-    // Macros (training day)
     const proteinG = r(weight * 2.2);
-    const proteinKcal = proteinG * 4;
-    const fatG = r(trainCals * 0.25 / 9);
-    const fatKcal = fatG * 9;
-    const carbsKcal = Math.max(0, trainCals - proteinKcal - fatKcal);
-    const carbsG = r(carbsKcal / 4);
-
-    let note = "";
-    if (goal === "cut") note = "If strength drops for 2+ weeks, add 100–150 kcal on training days (mostly carbs) or reduce the cut slightly.";
-    else if (goal === "maintain") note = "Track weekly average weight. If it trends up/down, adjust ±150 kcal.";
-    else note = "Slow bulk only. If you're gaining too fast, drop 100–150 kcal and keep steps consistent.";
-    if (intensity === "hard" || intensity === "veryhard") note += " Hard sessions need fuel — carbs help performance.";
-    else if (intensity === "light") note += " Light day — keep it steady and focus on recovery.";
-
-    // Weekly projection
-    const weeklyDelta = (trainDays * trainCals + restDays * restCals) - (tdee * 7);
-    const kgPerWeek = weeklyDelta / 7700;
+    const fatG = r(trainKcal * 0.25 / 9);
+    const carbsG = r((trainKcal - proteinG * 4 - fatG * 9) / 4);
 
     return {
-      goal: goalName(goal), goalRaw: goal, intensity,
-      trainDays, restDays, bump,
-      daily: r(target), trainKcal: r(trainCals), restKcal: r(restCals),
+      goal: goal.toUpperCase(), goalRaw: goal, trainDays, restDays,
+      daily: r(target), trainKcal: r(trainKcal), restKcal: r(restKcal),
       tdee: r(tdee), bmr: r(bmr),
-      proteinG, carbsG, fatG, proteinKcal, carbsKcal, fatKcal,
-      note, weight, kgPerWeek
+      proteinG, carbsG, fatG,
+      weight, kgPerWeek: ( (trainDays*trainKcal + restDays*restKcal) - (tdee*7) ) / 7700
     };
   }
 
-  // ── Live calc (debounced) ──
-  let liveTimer = null;
-  function liveCalc() {
-    clearTimeout(liveTimer);
-    liveTimer = setTimeout(() => {
-      const plan = calculatePlan();
-      if (plan && document.getElementById("results").classList.contains("visible")) {
-        renderResults(plan);
-      }
-    }, 300);
-  }
-
-  // ── Main calculate ──
   function calculateAndShow() {
     const plan = calculatePlan();
-    if (!plan) { alert("Please enter realistic values."); return; }
+    if (!plan) { alert("Enter valid stats"); return; }
     lastPlan = plan;
     renderResults(plan);
     document.getElementById("results").classList.add("visible");
@@ -759,287 +690,130 @@
     }, 100);
   }
 
-  // ── Render results ──
   function renderResults(plan) {
     const gc = goalColor(plan.goalRaw);
-    const labelMap = { cut: "Daily Target (Cut)", maintain: "Daily Target (Maintain)", bulk: "Daily Target (Bulk)" };
-
-    document.getElementById("rLabel").textContent = labelMap[plan.goalRaw];
+    document.getElementById("rLabel").textContent = `Daily Target (${plan.goal})`;
     document.getElementById("rDaily").innerHTML = `${plan.daily.toLocaleString()}<span>kcal/day</span>`;
-    document.getElementById("rMeta").textContent =
-      `${plan.goal} • ${plan.trainDays} training days/week • ${plan.intensity} intensity`;
+    document.getElementById("rMeta").textContent = `${plan.trainDays} training days selected`;
     document.getElementById("rTrain").textContent = `${plan.trainKcal.toLocaleString()} kcal`;
     document.getElementById("rRest").textContent = `${plan.restKcal.toLocaleString()} kcal`;
     document.getElementById("rTdee").textContent = `${plan.tdee.toLocaleString()} kcal`;
     document.getElementById("rBmr").textContent = `${plan.bmr.toLocaleString()} kcal`;
-    document.getElementById("rNotes").textContent = plan.note;
-
-    // Macros
+    
     document.getElementById("mProtein").textContent = plan.proteinG;
     document.getElementById("mCarbs").textContent = plan.carbsG;
     document.getElementById("mFat").textContent = plan.fatG;
 
-    const totalKcal = plan.proteinKcal + plan.carbsKcal + plan.fatKcal;
-    const pPct = r(plan.proteinKcal / totalKcal * 100);
-    const cPct = r(plan.carbsKcal / totalKcal * 100);
-    const fPct = r(plan.fatKcal / totalKcal * 100);
-    document.getElementById("pProteinPct").textContent = pPct + "%";
-    document.getElementById("pCarbsPct").textContent = cPct + "%";
-    document.getElementById("pFatPct").textContent = fPct + "%";
+    const totalKcal = plan.proteinG*4 + plan.carbsG*4 + plan.fatG*9;
+    document.getElementById("pProteinPct").textContent = r(plan.proteinG*4/totalKcal*100) + "%";
+    document.getElementById("pCarbsPct").textContent = r(plan.carbsG*4/totalKcal*100) + "%";
+    document.getElementById("pFatPct").textContent = r(plan.fatG*9/totalKcal*100) + "%";
+    
     setTimeout(() => {
-      document.getElementById("pProteinBar").style.width = pPct + "%";
-      document.getElementById("pCarbsBar").style.width = cPct + "%";
-      document.getElementById("pFatBar").style.width = fPct + "%";
-    }, 50);
+      document.getElementById("pProteinBar").style.width = (plan.proteinG*4/totalKcal*100) + "%";
+      document.getElementById("pCarbsBar").style.width = (plan.carbsG*4/totalKcal*100) + "%";
+      document.getElementById("pFatBar").style.width = (plan.fatG*9/totalKcal*100) + "%";
+    }, 100);
 
-    // Hero gradient
-    const heroEl = document.getElementById("resultHero");
-    heroEl.style.background = `linear-gradient(135deg, ${gc}22, ${gc}11)`;
-    heroEl.style.borderColor = gc + "55";
+    const hero = document.getElementById("resultHero");
+    hero.style.background = `linear-gradient(135deg, ${gc}22, ${gc}11)`;
+    hero.style.borderColor = gc + "55";
 
-    // Charts
-    renderBarChart(plan, gc);
-    renderDonutChart(plan);
-    renderWeekChart(plan, gc);
-    renderMacroChart(plan);
-    renderProjChart(plan, gc);
-    renderWeekGrid(plan);
+    updateCharts(plan, gc);
   }
 
-  // ── Chart: Bar ──
-  function renderBarChart(plan, gc) {
-    const ctx = document.getElementById("barChart").getContext("2d");
-    if (barChartInst) barChartInst.destroy();
-    barChartInst = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["BMR", "TDEE", "Target", "Train Day", "Rest Day"],
-        datasets: [{
-          data: [plan.bmr, plan.tdee, plan.daily, plan.trainKcal, plan.restKcal],
-          backgroundColor: ["rgba(252,129,129,.7)", "rgba(246,173,85,.7)", gc + "cc", "rgba(124,106,247,.8)", "rgba(79,209,197,.7)"],
-          borderRadius: 8, borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} kcal` } } },
-        scales: {
-          x: { grid: { color: "rgba(255,255,255,.05)" }, ticks: { color: "rgba(255,255,255,.55)", font: { size: 11 } } },
-          y: { grid: { color: "rgba(255,255,255,.05)" }, ticks: { color: "rgba(255,255,255,.55)", font: { size: 11 }, callback: v => v.toLocaleString() } }
+  function updateCharts(plan, gc) {
+    const chartConfigs = {
+      barChart: {
+        type: 'bar',
+        data: {
+          labels: ['BMR', 'TDEE', 'Target', 'Train', 'Rest'],
+          datasets: [{
+            data: [plan.bmr, plan.tdee, plan.daily, plan.trainKcal, plan.restKcal],
+            backgroundColor: ['#fc8181', '#f6ad55', gc, '#7c6af7', '#4fd1c5'],
+            borderRadius: 6
+          }]
         }
-      }
-    });
-  }
-
-  // ── Chart: Donut ──
-  function renderDonutChart(plan) {
-    const ctx = document.getElementById("donutChart").getContext("2d");
-    if (donutChartInst) donutChartInst.destroy();
-    const activityKcal = plan.tdee - plan.bmr;
-    const goalDelta = plan.daily - plan.tdee;
-    donutChartInst = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["BMR", "Activity", goal === "cut" ? "Deficit" : "Surplus"],
-        datasets: [{
-          data: [plan.bmr, activityKcal, Math.abs(goalDelta)],
-          backgroundColor: ["rgba(252,129,129,.8)", "rgba(246,173,85,.8)", "rgba(124,106,247,.8)"],
-          borderColor: "transparent", borderWidth: 0, hoverOffset: 6
-        }]
       },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: "68%",
-        plugins: {
-          legend: { position: "bottom", labels: { color: "rgba(255,255,255,.6)", font: { size: 11 }, padding: 12, boxWidth: 12 } },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} kcal` } }
-        }
-      }
-    });
-  }
-
-  // ── Chart: Weekly bar ──
-  function renderWeekChart(plan, gc) {
-    const ctx = document.getElementById("weekChart").getContext("2d");
-    if (weekChartInst) weekChartInst.destroy();
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    // Distribute training days across Mon/Wed/Fri/Sat first
-    const trainPattern = [true, false, true, false, true, true, false];
-    let trainCount = 0;
-    const isTrainDay = days.map((_, i) => {
-      if (trainCount < plan.trainDays && trainPattern[i]) { trainCount++; return true; }
-      return false;
-    });
-    // Fill remaining
-    for (let i = 0; i < 7 && trainCount < plan.trainDays; i++) {
-      if (!isTrainDay[i]) { isTrainDay[i] = true; trainCount++; }
-    }
-    const data = isTrainDay.map(t => t ? plan.trainKcal : plan.restKcal);
-    const colors = isTrainDay.map(t => t ? "rgba(124,106,247,.8)" : "rgba(79,209,197,.65)");
-
-    weekChartInst = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: days,
-        datasets: [{
-          data, backgroundColor: colors,
-          borderRadius: 8, borderSkipped: false,
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} kcal` } }
+      donutChart: {
+        type: 'doughnut',
+        data: {
+          labels: ['BMR', 'Activity', plan.goalRaw === 'cut' ? 'Deficit' : 'Surplus'],
+          datasets: [{
+            data: [plan.bmr, plan.tdee - plan.bmr, Math.abs(plan.daily - plan.tdee)],
+            backgroundColor: ['#fc8181', '#f6ad55', '#7c6af7'],
+            borderWidth: 0
+          }]
         },
-        scales: {
-          x: { grid: { display: false }, ticks: { color: "rgba(255,255,255,.55)", font: { size: 12 } } },
-          y: {
-            grid: { color: "rgba(255,255,255,.05)" },
-            ticks: { color: "rgba(255,255,255,.55)", font: { size: 11 }, callback: v => v.toLocaleString() },
-            min: Math.max(0, Math.min(plan.trainKcal, plan.restKcal) - 300)
-          }
-        }
-      }
-    });
-
-    // Store for week grid
-    window._weekData = { isTrainDay, days };
-  }
-
-  // ── Week grid pills ──
-  function renderWeekGrid(plan) {
-    if (!window._weekData) return;
-    const { isTrainDay, days } = window._weekData;
-    const grid = document.getElementById("weekGrid");
-    grid.innerHTML = days.map((d, i) => {
-      const t = isTrainDay[i];
-      const kcal = t ? plan.trainKcal : plan.restKcal;
-      return `<div class="day-pill ${t ? 'train-day' : 'rest-day'}">
-        <div class="day-name">${d}</div>
-        <div class="day-kcal">${kcal.toLocaleString()}</div>
-      </div>`;
-    }).join("");
-  }
-
-  // ── Chart: Macro donut ──
-  function renderMacroChart(plan) {
-    const ctx = document.getElementById("macroChart").getContext("2d");
-    if (macroChartInst) macroChartInst.destroy();
-    macroChartInst = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["Protein", "Carbs", "Fat"],
-        datasets: [{
-          data: [plan.proteinKcal, plan.carbsKcal, plan.fatKcal],
-          backgroundColor: ["rgba(252,129,129,.85)", "rgba(246,173,85,.85)", "rgba(104,211,145,.85)"],
-          borderColor: "transparent", hoverOffset: 6
-        }]
+        options: { cutout: '70%' }
       },
-      options: {
-        responsive: true, maintainAspectRatio: false, cutout: "60%",
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.raw.toLocaleString()} kcal` } }
+      weekChart: {
+        type: 'bar',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            data: isTrainDay.map(t => t ? plan.trainKcal : plan.restKcal),
+            backgroundColor: isTrainDay.map(t => t ? '#7c6af7' : '#4fd1c5'),
+            borderRadius: 6
+          }]
         }
-      }
-    });
-  }
-
-  // ── Chart: 12-week projection ──
-  function renderProjChart(plan, gc) {
-    const ctx = document.getElementById("projChart").getContext("2d");
-    if (projChartInst) projChartInst.destroy();
-    const weeks = Array.from({length: 13}, (_, i) => `Wk ${i}`);
-    const weights = weeks.map((_, i) => +(plan.weight + plan.kgPerWeek * i).toFixed(2));
-    projChartInst = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: weeks,
-        datasets: [{
-          label: "Weight (kg)",
-          data: weights,
-          borderColor: gc,
-          backgroundColor: gc + "22",
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: gc,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-        }]
       },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.raw} kg` } }
+      macroChart: {
+        type: 'doughnut',
+        data: {
+          labels: ['Protein', 'Carbs', 'Fat'],
+          datasets: [{
+            data: [plan.proteinG*4, plan.carbsG*4, plan.fatG*9],
+            backgroundColor: ['#fc8181', '#f6ad55', '#68d391'],
+            borderWidth: 0
+          }]
         },
-        scales: {
-          x: { grid: { color: "rgba(255,255,255,.05)" }, ticks: { color: "rgba(255,255,255,.55)", font: { size: 11 } } },
-          y: { grid: { color: "rgba(255,255,255,.05)" }, ticks: { color: "rgba(255,255,255,.55)", font: { size: 11 }, callback: v => v + " kg" } }
+        options: { cutout: '65%' }
+      },
+      projChart: {
+        type: 'line',
+        data: {
+          labels: Array.from({length:13}, (_,i) => 'Wk '+i),
+          datasets: [{
+            data: Array.from({length:13}, (_,i) => +(plan.weight + plan.kgPerWeek*i).toFixed(1)),
+            borderColor: gc,
+            backgroundColor: gc + '22',
+            fill: true,
+            tension: 0.4
+          }]
         }
       }
+    };
+
+    Object.keys(chartConfigs).forEach(id => {
+      if (charts[id]) charts[id].destroy();
+      const ctx = document.getElementById(id).getContext('2d');
+      charts[id] = new Chart(ctx, {
+        ...chartConfigs[id],
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: id.includes('donut') || id.includes('macro') } },
+          scales: id.includes('Chart') && !id.includes('donut') && !id.includes('macro') ? {
+            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(255,255,255,0.5)' } },
+            x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.5)' } }
+          } : {}
+        }
+      });
     });
   }
 
-  // ── Copy plan ──
   function copyPlan() {
-    if (!lastPlan) return;
     const p = lastPlan;
-    const text = `ShredCalc Plan — ${p.goal}
-Daily Target: ${p.daily} kcal/day
-Training Day: ${p.trainKcal} kcal
-Rest Day: ${p.restKcal} kcal
-TDEE: ${p.tdee} kcal | BMR: ${p.bmr} kcal
-Macros (train day): Protein ${p.proteinG}g | Carbs ${p.carbsG}g | Fat ${p.fatG}g
-Note: ${p.note}`;
-    navigator.clipboard.writeText(text).then(() => showToast("✅ Plan copied!"));
-  }
-
-  // ── Print ──
-  function printPlan() { window.print(); }
-
-  // ── Share (URL params) ──
-  function sharePlan() {
-    const params = new URLSearchParams({
-      goal, sex: document.getElementById("sex").value,
-      weight: document.getElementById("weight").value,
-      height: document.getElementById("height").value,
-      age: document.getElementById("age").value,
-      activity: document.getElementById("activity").value,
-      trainDays: document.getElementById("trainDays").value,
-      intensity: document.getElementById("intensity").value
+    const text = `ShredCalc Plan (${p.goal})\nDaily: ${p.daily} kcal\nTrain: ${p.trainKcal} kcal\nRest: ${p.restKcal} kcal\nMacros: P ${p.proteinG}g | C ${p.carbsG}g | F ${p.fatG}g`;
+    navigator.clipboard.writeText(text).then(() => {
+      const t = document.getElementById("toast");
+      t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
+      setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 2000);
     });
-    const url = window.location.href.split("?")[0] + "?" + params.toString();
-    navigator.clipboard.writeText(url).then(() => showToast("🔗 Link copied!"));
   }
 
-  // ── Toast ──
-  function showToast(msg) {
-    const t = document.getElementById("toast");
-    t.textContent = msg;
-    t.style.opacity = "1"; t.style.transform = "translateX(-50%) translateY(0)";
-    setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateX(-50%) translateY(80px)"; }, 2500);
-  }
-
-  // ── Load from URL params ──
-  function loadFromParams() {
-    const p = new URLSearchParams(window.location.search);
-    if (!p.has("goal")) return;
-    setGoal(p.get("goal") || "cut");
-    if (p.has("sex")) document.getElementById("sex").value = p.get("sex");
-    if (p.has("weight")) document.getElementById("weight").value = p.get("weight");
-    if (p.has("height")) document.getElementById("height").value = p.get("height");
-    if (p.has("age")) document.getElementById("age").value = p.get("age");
-    if (p.has("activity")) document.getElementById("activity").value = p.get("activity");
-    if (p.has("trainDays")) document.getElementById("trainDays").value = p.get("trainDays");
-    if (p.has("intensity")) document.getElementById("intensity").value = p.get("intensity");
-    calculateAndShow();
-  }
-
-  // ── Init ──
-  setTab("activity");
-  document.getElementById("panelAct").classList.add("active");
-  loadFromParams();
+  function printPlan() { window.print(); }
 </script>
 </body>
 </html>
